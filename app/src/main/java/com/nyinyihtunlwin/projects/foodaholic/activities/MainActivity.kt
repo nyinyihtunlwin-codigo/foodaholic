@@ -1,14 +1,15 @@
-package com.nyinyihtunlwin.projects.foodaholic
+package com.nyinyihtunlwin.projects.foodaholic.activities
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
+import com.nyinyihtunlwin.projects.foodaholic.R
+import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseActivity
 
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
