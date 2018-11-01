@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar
 import android.view.Menu
 import android.view.MenuItem
 import com.nyinyihtunlwin.projects.foodaholic.R
+import com.nyinyihtunlwin.projects.foodaholic.network.FoodaholicRepository
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseActivity
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,6 +16,8 @@ class MainActivity : BaseActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        FoodaholicRepository.getInstance()
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
