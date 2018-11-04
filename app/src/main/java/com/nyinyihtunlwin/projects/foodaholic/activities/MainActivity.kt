@@ -1,21 +1,34 @@
 package com.nyinyihtunlwin.projects.foodaholic.activities
 
+import android.arch.lifecycle.ViewModelProviders
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.view.Menu
-import android.view.MenuItem
 import com.nyinyihtunlwin.projects.foodaholic.R
+import com.nyinyihtunlwin.projects.foodaholic.databinding.ActivityMainBinding
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModel
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModelFactory
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.CategoryView
 import com.nyinyihtunlwin.projects.foodaholic.network.FoodaholicRepository
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseActivity
-
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.ref.WeakReference
 
-class MainActivity : BaseActivity(){
+class MainActivity : BaseActivity(), CategoryView {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        var contentView = DataBindingUtil.setContentView<ActivityMainBinding>(
+            this@MainActivity,
+            R.layout.activity_main
+        )
         setSupportActionBar(toolbar)
+        contentView.viewModel = ViewModelProviders.of(
+            this@MainActivity,
+            CategoryViewModelFactory(WeakReference(this), this)
+        ).get(CategoryViewModel::class.java)
 
         FoodaholicRepository.getInstance()
 
@@ -25,19 +38,19 @@ class MainActivity : BaseActivity(){
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+    override fun onDataLoaded(catList: List<CategoryModel>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
+    override fun onError(message: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onShowLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onDismissLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
