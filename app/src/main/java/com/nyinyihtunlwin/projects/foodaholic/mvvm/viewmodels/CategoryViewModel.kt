@@ -1,28 +1,75 @@
 package com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels
 
-import android.arch.lifecycle.ViewModel
 import android.content.Context
+import android.databinding.ObservableBoolean
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.nyinyihtunlwin.projects.foodaholic.adapters.CategoryRecyAdapter
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.CategoryView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
 
 class CategoryViewModel(
-    var contextWeakReference: WeakReference<Context>,
-    var mView: CategoryView
-) : ViewModel() {
+    private var contextWeakReference: WeakReference<Context>,
+    private var mView: CategoryView
+) : BaseViewModel() {
+
+    private var mCompositeDisposable = CompositeDisposable()
+    private lateinit var mAdapter: CategoryRecyAdapter
+    var isLoading = ObservableBoolean()
+
+    fun startLoadingCategories() {
+        isLoading.set(true)
+        val categoryDisposable = mFoodaholicApi.getCategories()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+                    if (result?.categories != null && result.categories.size > 0) {
+                        mView.onDataLoaded(result.categories)
+                    } else {
+                        mView.onError("No data")
+                    }
+                    isLoading.set(false)
+                },
+                { error ->
+                    isLoading.set(false)
+                    mView.onError(error.message.toString())
+                }
+            )
+        mCompositeDisposable.add(categoryDisposable)
+    }
 
     fun getLayoutManager(): RecyclerView.LayoutManager {
         return LinearLayoutManager(contextWeakReference.get())
     }
 
     fun getAdapter(): CategoryRecyAdapter {
-        return CategoryRecyAdapter(contextWeakReference.get()!!)
+        mAdapter = CategoryRecyAdapter(contextWeakReference.get()!!)
+        return mAdapter
     }
 
     fun isHasFixedSize(): Boolean {
         return true
+    }
+
+    fun onRefresh() {
+        startLoadingCategories()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        if (!mCompositeDisposable.isDisposed) {
+            mCompositeDisposable.dispose()
+        }
+        contextWeakReference.clear()
+    }
+
+    fun setNewData(catList: List<CategoryModel>) {
+        mAdapter.setNewData(catList as MutableList<CategoryModel>)
     }
 
 }

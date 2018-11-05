@@ -13,12 +13,4 @@ class CategoryRecyAdapter(context: Context) : BaseRecyclerAdapter<CategoryViewHo
         var view = mLayoutInflator.inflate(R.layout.view_item_category, parent, false)
         return CategoryViewHolder(view)
     }
-
-    override fun onBindViewHolder(holder: BaseViewHolder<CategoryModel>, position: Int) {
-
-    }
-
-    override fun getItemCount(): Int {
-        return 10
-    }
 }

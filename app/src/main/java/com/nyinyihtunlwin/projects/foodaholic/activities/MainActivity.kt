@@ -4,53 +4,46 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.widget.Toast
 import com.nyinyihtunlwin.projects.foodaholic.R
 import com.nyinyihtunlwin.projects.foodaholic.databinding.ActivityMainBinding
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModel
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModelFactory
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.CategoryView
-import com.nyinyihtunlwin.projects.foodaholic.network.FoodaholicRepository
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.ref.WeakReference
 
 class MainActivity : BaseActivity(), CategoryView {
 
+    lateinit var contentView: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var contentView = DataBindingUtil.setContentView<ActivityMainBinding>(
+
+        contentView = DataBindingUtil.setContentView(
             this@MainActivity,
             R.layout.activity_main
         )
+
         setSupportActionBar(toolbar)
+
         contentView.viewModel = ViewModelProviders.of(
             this@MainActivity,
             CategoryViewModelFactory(WeakReference(this), this)
         ).get(CategoryViewModel::class.java)
 
-        FoodaholicRepository.getInstance()
+        contentView.viewModel!!.startLoadingCategories()
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
     }
 
     override fun onDataLoaded(catList: List<CategoryModel>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        contentView.viewModel!!.setNewData(catList)
     }
 
     override fun onError(message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onShowLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onDismissLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }
