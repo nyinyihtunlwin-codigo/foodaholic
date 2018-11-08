@@ -25,7 +25,7 @@ class MainActivity : BaseActivity() {
         )
         setSupportActionBar(toolbar)
 
-        tv_app_name.typeface = Typeface.createFromAsset(assets, "entsans.ttf")
+     //   tv_app_name.typeface = Typeface.createFromAsset(assets, "entsans.ttf")
 
         val sectionPagerAdapter = SectionPagerAdapter(supportFragmentManager)
         vp_meal.adapter = sectionPagerAdapter

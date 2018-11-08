@@ -3,42 +3,40 @@ package com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.databinding.ObservableBoolean
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import com.azoft.carousellayoutmanager.CarouselLayoutManager
-import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener
 import com.azoft.carousellayoutmanager.CenterScrollListener
-import com.nyinyihtunlwin.projects.foodaholic.adapters.CategoryRecyAdapter
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.CategoryView
+import com.nyinyihtunlwin.projects.foodaholic.adapters.LatestRecyAdapter
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.LatestView
 import com.nyinyihtunlwin.projects.foodaholic.network.FoodaholicDataRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
 
-class CategoryViewModel(
+class LatestViewModel(
     private var contextWeakReference: WeakReference<Context>,
-    private var mView: CategoryView
+    private var mView: LatestView
 ) : BaseViewModel() {
 
-    var mResponseLD: MutableLiveData<List<CategoryModel>> = MutableLiveData()
+    var mResponseLD: MutableLiveData<List<MealModel>> = MutableLiveData()
     var mErrorLD: MutableLiveData<String> = MutableLiveData()
 
     private var mCompositeDisposable = CompositeDisposable()
-    private lateinit var mAdapter: CategoryRecyAdapter
+    private lateinit var mAdapter: LatestRecyAdapter
     var isLoading = ObservableBoolean()
 
-    fun startLoadingCategories() {
+    fun startLoadingLatestMeals() {
         isLoading.set(true)
-        FoodaholicDataRepository.getInstance().startLoadingCategories(mResponseLD, mErrorLD)
-        val categoryDisposable = mFoodaholicApi.getCategories()
+        FoodaholicDataRepository.getInstance().startLoadingLatestMeals(mResponseLD, mErrorLD)
+        val latestDisposable = mFoodaholicApi.getLatestMeals()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    if (result?.categories != null && result.categories.size > 0) {
-                        mView.onDataLoaded(result.categories)
+                    if (result?.meals != null && result.meals.size > 0) {
+                        mView.onDataLoaded(result.meals)
                     } else {
                         mView.onError("No data")
                     }
@@ -49,17 +47,15 @@ class CategoryViewModel(
                     mView.onError(error.message.toString())
                 }
             )
-        mCompositeDisposable.add(categoryDisposable)
+        mCompositeDisposable.add(latestDisposable)
     }
 
     fun getLayoutManager(): RecyclerView.LayoutManager {
-        /*val carouselLayoutManager = CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL)
-        carouselLayoutManager.setPostLayoutListener(CarouselZoomPostLayoutListener())*/
-        return LinearLayoutManager(contextWeakReference.get())
+        return GridLayoutManager(contextWeakReference.get(), 2)
     }
 
-    fun getAdapter(): CategoryRecyAdapter {
-        mAdapter = CategoryRecyAdapter(contextWeakReference.get()!!)
+    fun getAdapter(): LatestRecyAdapter {
+        mAdapter = LatestRecyAdapter(contextWeakReference.get()!!)
         return mAdapter
     }
 
@@ -72,7 +68,7 @@ class CategoryViewModel(
     }
 
     fun onRefresh() {
-        startLoadingCategories()
+        startLoadingLatestMeals()
     }
 
     override fun onCleared() {
@@ -83,8 +79,8 @@ class CategoryViewModel(
         contextWeakReference.clear()
     }
 
-    fun setNewData(catList: List<CategoryModel>) {
-        mAdapter.setNewData(catList as MutableList<CategoryModel>)
+    fun setNewData(mealList: List<MealModel>) {
+        mAdapter.setNewData(mealList as MutableList<MealModel>)
     }
 
 }

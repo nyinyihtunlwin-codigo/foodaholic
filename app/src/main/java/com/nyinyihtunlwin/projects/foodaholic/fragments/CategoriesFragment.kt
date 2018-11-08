@@ -10,18 +10,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.nyinyihtunlwin.projects.foodaholic.R
-import com.nyinyihtunlwin.projects.foodaholic.databinding.FragmentLatestBinding
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.LatestViewModel
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.LatestViewModelFactory
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.LatestView
+import com.nyinyihtunlwin.projects.foodaholic.databinding.FragmentCategoriesBinding
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModel
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModelFactory
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.CategoryView
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseFragment
 import java.lang.ref.WeakReference
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class LatestFragment : BaseFragment(), LatestView {
+class CategoriesFragment : BaseFragment(), CategoryView {
 
 
     private var param1: String? = null
@@ -40,13 +40,13 @@ class LatestFragment : BaseFragment(), LatestView {
         savedInstanceState: Bundle?
     ): View? {
         val inflatedView =
-            DataBindingUtil.inflate<FragmentLatestBinding>(inflater, R.layout.fragment_latest, container, false)
+            DataBindingUtil.inflate<FragmentCategoriesBinding>(inflater, R.layout.fragment_categories, container, false)
         inflatedView.viewModel = ViewModelProviders.of(
-            this@LatestFragment,
-            LatestViewModelFactory(WeakReference(activity!!.applicationContext), this)
-        ).get(LatestViewModel::class.java)
+            this@CategoriesFragment,
+            CategoryViewModelFactory(WeakReference(activity!!.applicationContext), this)
+        ).get(CategoryViewModel::class.java)
 
-        inflatedView.viewModel!!.startLoadingLatestMeals()
+        inflatedView.viewModel!!.startLoadingCategories()
 
         inflatedView.viewModel!!.mResponseLD.observe(this, Observer {
             inflatedView.viewModel!!.setNewData(it as MutableList)
@@ -57,7 +57,7 @@ class LatestFragment : BaseFragment(), LatestView {
         return inflatedView.root
     }
 
-    override fun onDataLoaded(mealList: List<MealModel>) {
+    override fun onDataLoaded(catList: List<CategoryModel>) {
     }
 
     override fun onError(message: String) {
@@ -67,7 +67,7 @@ class LatestFragment : BaseFragment(), LatestView {
 
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            LatestFragment().apply {
+            CategoriesFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

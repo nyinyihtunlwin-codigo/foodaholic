@@ -3,6 +3,7 @@ package com.nyinyihtunlwin.projects.foodaholic.adapters
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import com.nyinyihtunlwin.projects.foodaholic.fragments.CategoriesFragment
 import com.nyinyihtunlwin.projects.foodaholic.fragments.LatestFragment
 
 class SectionPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
@@ -12,7 +13,7 @@ class SectionPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
                 LatestFragment()
             }
             1 -> {
-                LatestFragment()
+                CategoriesFragment()
             }
             else -> {
                 LatestFragment()
