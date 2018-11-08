@@ -1,21 +1,18 @@
 package com.nyinyihtunlwin.projects.foodaholic.activities
 
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
+import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.widget.Toast
+import android.support.design.widget.TabLayout
+import android.support.v4.content.ContextCompat
 import com.nyinyihtunlwin.projects.foodaholic.R
+import com.nyinyihtunlwin.projects.foodaholic.adapters.SectionPagerAdapter
 import com.nyinyihtunlwin.projects.foodaholic.databinding.ActivityMainBinding
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModel
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModelFactory
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.CategoryView
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.ref.WeakReference
 
-class MainActivity : BaseActivity(), CategoryView {
+class MainActivity : BaseActivity() {
 
     lateinit var contentView: ActivityMainBinding
 
@@ -26,24 +23,40 @@ class MainActivity : BaseActivity(), CategoryView {
             this@MainActivity,
             R.layout.activity_main
         )
-
         setSupportActionBar(toolbar)
 
-        contentView.viewModel = ViewModelProviders.of(
-            this@MainActivity,
-            CategoryViewModelFactory(WeakReference(this), this)
-        ).get(CategoryViewModel::class.java)
+        tv_app_name.typeface = Typeface.createFromAsset(assets, "entsans.ttf")
 
-        contentView.viewModel!!.startLoadingCategories()
+        val sectionPagerAdapter = SectionPagerAdapter(supportFragmentManager)
+        vp_meal.adapter = sectionPagerAdapter
+
+        vp_meal.addOnPageChangeListener(object : TabLayout.TabLayoutOnPageChangeListener(tabs) {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                setSectionTitle(position)
+            }
+        })
+        tabs.addOnTabSelectedListener(object : TabLayout.ViewPagerOnTabSelectedListener(vp_meal) {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                vp_meal.currentItem = tab.position
+                setSectionTitle(tab.position)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+        })
+
 
     }
 
-    override fun onDataLoaded(catList: List<CategoryModel>) {
-        contentView.viewModel!!.setNewData(catList)
+    private fun setSectionTitle(position: Int) {
+        var sectionTitle = ""
+        when (position) {
+            0 -> sectionTitle = "Latest"
+            1 -> sectionTitle = "Categories"
+        }
+        tv_section_name.text = sectionTitle
     }
 
-    override fun onError(message: String) {
-        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-    }
 
 }
