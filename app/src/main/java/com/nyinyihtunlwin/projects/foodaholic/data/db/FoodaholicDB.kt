@@ -26,6 +26,7 @@ abstract class FoodaholicDB : RoomDatabase() {
         fun getDatabase(context: Context): FoodaholicDB {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context, FoodaholicDB::class.java, DB_NAME)
+                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries() //Remove this after testing. Access to DB should always be from background thread.
                     .build()
             }

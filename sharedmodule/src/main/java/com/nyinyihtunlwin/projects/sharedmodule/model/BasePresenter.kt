@@ -12,7 +12,7 @@ class BasePresenter<T : BaseView> : ViewModel() {
     val errorLD: MutableLiveData<Error>
         get() = mErrorLD
 
-    open fun onCreate(mView: T) {
+    fun onCreate(mView: T) {
         this.mView = mView
         mErrorLD = MutableLiveData()
     }

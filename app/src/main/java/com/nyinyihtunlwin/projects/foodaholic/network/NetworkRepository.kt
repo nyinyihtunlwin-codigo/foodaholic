@@ -14,16 +14,16 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class FoodaholicDataRepository {
+class NetworkRepository {
 
     companion object {
         lateinit var mFoodaholicApi: FoodaholicApi
 
-        private var INSTANCE: FoodaholicDataRepository? = null
+        private var INSTANCE: NetworkRepository? = null
 
-        fun getInstance(): FoodaholicDataRepository {
+        fun getInstance(): NetworkRepository {
             if (INSTANCE == null) {
-                INSTANCE = FoodaholicDataRepository()
+                INSTANCE = NetworkRepository()
             }
             return INSTANCE!!
         }
@@ -50,7 +50,7 @@ class FoodaholicDataRepository {
         responseLD: MutableLiveData<List<CategoryModel>>,
         errorLd: MutableLiveData<String>
     ) {
-        BaseViewModel.mFoodaholicApi.getCategories()
+        val subscribe = BaseViewModel.mFoodaholicApi.getCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -71,7 +71,7 @@ class FoodaholicDataRepository {
         responseLD: MutableLiveData<List<MealModel>>,
         errorLd: MutableLiveData<String>
     ) {
-        BaseViewModel.mFoodaholicApi.getLatestMeals()
+        val subscribe = BaseViewModel.mFoodaholicApi.getLatestMeals()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

@@ -1,6 +1,5 @@
 package com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels
 
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.databinding.ObservableBoolean
 import android.support.v7.widget.GridLayoutManager
@@ -9,7 +8,6 @@ import com.azoft.carousellayoutmanager.CenterScrollListener
 import com.nyinyihtunlwin.projects.foodaholic.adapters.LatestRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.LatestView
-import com.nyinyihtunlwin.projects.foodaholic.network.FoodaholicDataRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -20,16 +18,12 @@ class LatestViewModel(
     private var mView: LatestView
 ) : BaseViewModel() {
 
-    var mResponseLD: MutableLiveData<List<MealModel>> = MutableLiveData()
-    var mErrorLD: MutableLiveData<String> = MutableLiveData()
-
     private var mCompositeDisposable = CompositeDisposable()
     private lateinit var mAdapter: LatestRecyAdapter
     var isLoading = ObservableBoolean()
 
     fun startLoadingLatestMeals() {
         isLoading.set(true)
-        FoodaholicDataRepository.getInstance().startLoadingLatestMeals(mResponseLD, mErrorLD)
         val latestDisposable = mFoodaholicApi.getLatestMeals()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

@@ -12,6 +12,6 @@ abstract class MealDao {
     abstract fun insertMeal(mealModel: MealModel): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertMeals(vararg meals: MealModel): LongArray
+    abstract fun insertMeals(meals: List<MealModel>): LongArray
 
 }
