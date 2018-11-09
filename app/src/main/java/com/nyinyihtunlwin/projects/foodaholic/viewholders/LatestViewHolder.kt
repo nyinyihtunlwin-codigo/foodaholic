@@ -2,11 +2,15 @@ package com.nyinyihtunlwin.projects.foodaholic.viewholders
 
 import android.view.View
 import com.bumptech.glide.Glide
+import com.nyinyihtunlwin.projects.foodaholic.delegates.MealDelegate
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseViewHolder
 import kotlinx.android.synthetic.main.view_item_category.view.*
 
-class LatestViewHolder(itemView: View) : BaseViewHolder<MealModel>(itemView) {
+class LatestViewHolder(
+    itemView: View,
+    var mealDelegate: MealDelegate
+) : BaseViewHolder<MealModel>(itemView) {
 
     override fun setData(data: MealModel) {
         mData = data
@@ -19,5 +23,6 @@ class LatestViewHolder(itemView: View) : BaseViewHolder<MealModel>(itemView) {
     }
 
     override fun onClick(v: View?) {
+        mealDelegate.onTapMeal(mData!!)
     }
 }

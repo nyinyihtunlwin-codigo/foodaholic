@@ -5,7 +5,9 @@ import android.databinding.ObservableBoolean
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.azoft.carousellayoutmanager.CenterScrollListener
+import com.nyinyihtunlwin.projects.foodaholic.activities.MealDetailsActivity
 import com.nyinyihtunlwin.projects.foodaholic.adapters.LatestRecyAdapter
+import com.nyinyihtunlwin.projects.foodaholic.delegates.MealDelegate
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.LatestView
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,7 +18,7 @@ import java.lang.ref.WeakReference
 class LatestViewModel(
     private var contextWeakReference: WeakReference<Context>,
     private var mView: LatestView
-) : BaseViewModel() {
+) : BaseViewModel(), MealDelegate {
 
     private var mCompositeDisposable = CompositeDisposable()
     private lateinit var mAdapter: LatestRecyAdapter
@@ -49,7 +51,7 @@ class LatestViewModel(
     }
 
     fun getAdapter(): LatestRecyAdapter {
-        mAdapter = LatestRecyAdapter(contextWeakReference.get()!!)
+        mAdapter = LatestRecyAdapter(contextWeakReference.get()!!, this)
         return mAdapter
     }
 
@@ -71,6 +73,15 @@ class LatestViewModel(
             mCompositeDisposable.dispose()
         }
         contextWeakReference.clear()
+    }
+
+    override fun onTapMeal(mealModel: MealModel) {
+        contextWeakReference.get()!!.startActivity(
+            MealDetailsActivity.newInstnace(
+                contextWeakReference.get()!!.applicationContext,
+                ""
+            )
+        )
     }
 
     fun setNewData(mealList: List<MealModel>) {
