@@ -1,10 +1,9 @@
 package com.nyinyihtunlwin.projects.sharedmodule.model
 
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 
 
-class BasePresenter<T : BaseView> : ViewModel() {
+open class BasePresenter<T : BaseView> {
 
     protected lateinit var mView: T
     private lateinit var mErrorLD: MutableLiveData<Error>
@@ -12,8 +11,8 @@ class BasePresenter<T : BaseView> : ViewModel() {
     val errorLD: MutableLiveData<Error>
         get() = mErrorLD
 
-    fun onCreate(mView: T) {
-        this.mView = mView
+    open fun onCreate(view: T) {
+        this.mView = view
         mErrorLD = MutableLiveData()
     }
 

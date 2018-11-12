@@ -1,7 +1,5 @@
 package com.nyinyihtunlwin.projects.foodaholic.data.db.dao
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
@@ -11,7 +9,7 @@ import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 
 
 @Dao
-abstract class CategoryDao {
+abstract interface CategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCategory(categoryModel: CategoryModel): Long
@@ -19,7 +17,7 @@ abstract class CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCategories(categories: List<CategoryModel>): LongArray
 
-    @Query("SELECT * FROM " + AppConstants.TABLE_CATEGORIES)
-    abstract fun getCategories(): LiveData<List<CategoryModel>>
+    @Query("SELECT * FROM ${AppConstants.TABLE_CATEGORIES}")
+    abstract fun getCategories(): List<CategoryModel>
 
 }

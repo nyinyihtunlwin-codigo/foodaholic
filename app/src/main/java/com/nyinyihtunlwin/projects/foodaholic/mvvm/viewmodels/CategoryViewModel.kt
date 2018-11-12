@@ -5,14 +5,17 @@ import android.content.Context
 import android.databinding.ObservableBoolean
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.Toast
+import android.util.Log
 import com.azoft.carousellayoutmanager.CenterScrollListener
-import com.nyinyihtunlwin.projects.foodaholic.activities.MealDetailsActivity
 import com.nyinyihtunlwin.projects.foodaholic.adapters.CategoryRecyAdapter
+import com.nyinyihtunlwin.projects.foodaholic.data.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.CategoryDelegate
+import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
+import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
 import com.nyinyihtunlwin.projects.foodaholic.network.NetworkRepository
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.lang.ref.WeakReference
 
 class CategoryViewModel(
@@ -25,9 +28,25 @@ class CategoryViewModel(
     private lateinit var mAdapter: CategoryRecyAdapter
     var isLoading = ObservableBoolean()
 
-    fun startLoadingCategories() {
+    override fun onStart() {
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+
+        mAdapter = CategoryRecyAdapter(contextWeakReference.get()!!, this)
+
+        val value = LocalRepository.getInstance().getDB().categoryDao().getCategories()
+        if (!value.isEmpty()) {
+            mResponseLD.value = value
+        } else {
+            startLoadingCategories()
+        }
+    }
+
+    private fun startLoadingCategories() {
         isLoading.set(true)
-        NetworkRepository.getInstance().startLoadingCategories(mResponseLD, mErrorLD)
+        NetworkRepository.getInstance().startLoadingCategories()
     }
 
     fun getLayoutManager(): RecyclerView.LayoutManager {
@@ -35,7 +54,6 @@ class CategoryViewModel(
     }
 
     fun getAdapter(): CategoryRecyAdapter {
-        mAdapter = CategoryRecyAdapter(contextWeakReference.get()!!, this)
         return mAdapter
     }
 
@@ -53,6 +71,9 @@ class CategoryViewModel(
 
     override fun onCleared() {
         super.onCleared()
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
         contextWeakReference.clear()
     }
 
@@ -66,6 +87,19 @@ class CategoryViewModel(
 
     fun dismissLoading() {
         isLoading.set(false)
+    }
+
+    @Subscribe
+    fun onCategoriesLoaded(events: DataEvents.CategoriesLoadedEvent) {
+        mResponseLD.value = events.loadedCategories
+        val insertCategories =
+            LocalRepository.getInstance().getDB().categoryDao().insertCategories(events.loadedCategories)
+        Log.e("inserted", insertCategories.size.toString())
+    }
+
+    @Subscribe
+    fun onApiErrorLoaded(event: ErrorEvents.ApiErrorEvent) {
+        mErrorLD.value = event.getMsg()
     }
 
 }

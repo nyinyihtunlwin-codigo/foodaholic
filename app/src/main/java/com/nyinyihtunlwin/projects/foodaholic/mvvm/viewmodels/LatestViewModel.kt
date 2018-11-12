@@ -24,6 +24,10 @@ class LatestViewModel(
     private lateinit var mAdapter: LatestRecyAdapter
     var isLoading = ObservableBoolean()
 
+    override fun onStart() {
+
+    }
+
     fun startLoadingLatestMeals() {
         isLoading.set(true)
         val latestDisposable = mFoodaholicApi.getLatestMeals()

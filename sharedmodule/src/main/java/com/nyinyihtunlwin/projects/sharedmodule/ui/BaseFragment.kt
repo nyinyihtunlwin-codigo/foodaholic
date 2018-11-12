@@ -7,6 +7,8 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 open class BaseFragment : Fragment(), Observer<Error> {
 
@@ -29,6 +31,9 @@ open class BaseFragment : Fragment(), Observer<Error> {
 
     override fun onStart() {
         super.onStart()
+        if (!EventBus.getDefault().isRegistered(this!!)) {
+            EventBus.getDefault().register(this)
+        }
         if (viewLifecycleOwner != null) {
             viewLifecycleOwner!!.lifecycle.handleLifecycleEvent(Event.ON_START)
         }
@@ -49,6 +54,9 @@ open class BaseFragment : Fragment(), Observer<Error> {
     }
 
     override fun onStop() {
+        if (EventBus.getDefault().isRegistered(this!!)) {
+            EventBus.getDefault().unregister(this!!)
+        }
         if (viewLifecycleOwner != null) {
             viewLifecycleOwner!!.lifecycle.handleLifecycleEvent(Event.ON_STOP)
         }
@@ -64,6 +72,11 @@ open class BaseFragment : Fragment(), Observer<Error> {
     }
 
     override fun onChanged(error: Error?) {
+
+    }
+
+    @Subscribe
+    fun onEvent(event: Any?) {
 
     }
 }

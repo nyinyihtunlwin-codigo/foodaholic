@@ -19,6 +19,7 @@ import java.lang.ref.WeakReference
 
 class CategoriesFragment : BaseFragment() {
 
+    lateinit var viewModel: CategoryViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,16 +31,22 @@ class CategoriesFragment : BaseFragment() {
             CategoryViewModelFactory(WeakReference(activity!!.applicationContext))
         ).get(CategoryViewModel::class.java)
 
-        inflatedView.viewModel!!.startLoadingCategories()
-        inflatedView.viewModel!!.mResponseLD.observe(this, Observer {
-            inflatedView.viewModel!!.setNewData(it as MutableList)
-            inflatedView.viewModel!!.dismissLoading()
+        viewModel = inflatedView.viewModel!!
+
+        viewModel.mResponseLD.observe(this, Observer {
+            viewModel.setNewData(it as MutableList)
+            viewModel.dismissLoading()
         })
-        inflatedView.viewModel!!.mErrorLD.observe(this, Observer {
-            inflatedView.viewModel!!.dismissLoading()
+        viewModel.mErrorLD.observe(this, Observer {
+            viewModel.dismissLoading()
             Toast.makeText(activity!!.applicationContext, it.toString(), Toast.LENGTH_SHORT).show()
         })
         return inflatedView.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.onStart()
     }
 
 }

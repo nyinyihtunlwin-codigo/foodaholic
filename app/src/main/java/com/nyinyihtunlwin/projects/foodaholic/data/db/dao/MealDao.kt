@@ -6,7 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 
 @Dao
-abstract class MealDao {
+abstract interface MealDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertMeal(mealModel: MealModel): Long

@@ -1,14 +1,17 @@
 package com.nyinyihtunlwin.projects.foodaholic.network
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
+import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
+import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.BaseViewModel
 import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -46,32 +49,37 @@ class NetworkRepository {
         mFoodaholicApi = retrofit!!.create(FoodaholicApi::class.java)
     }
 
-    fun startLoadingCategories(
-        responseLD: MutableLiveData<List<CategoryModel>>,
-        errorLd: MutableLiveData<String>
-    ) {
-        val subscribe = BaseViewModel.mFoodaholicApi.getCategories()
+    @SuppressLint("CheckResult")
+    fun startLoadingCategories() {
+        BaseViewModel.mFoodaholicApi.getCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    if (result?.categories != null && result.categories.size > 0) {
-                        responseLD.value = result.categories
+                    if (result != null
+                        && result.categories.isNotEmpty()
+                    ) {
+                        val categoriesLoadedEvent = DataEvents.CategoriesLoadedEvent(result.categories)
+                        EventBus.getDefault().post(categoriesLoadedEvent)
                     } else {
-                        errorLd.value = "No data"
+                        if (result != null)
+                            EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent("No data found!"))
+                        else
+                            EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent())
                     }
                 },
                 { error ->
-                    errorLd.value = error.message.toString()
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
                 }
             )
     }
 
+    @SuppressLint("CheckResult")
     fun startLoadingLatestMeals(
         responseLD: MutableLiveData<List<MealModel>>,
         errorLd: MutableLiveData<String>
     ) {
-        val subscribe = BaseViewModel.mFoodaholicApi.getLatestMeals()
+        BaseViewModel.mFoodaholicApi.getLatestMeals()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

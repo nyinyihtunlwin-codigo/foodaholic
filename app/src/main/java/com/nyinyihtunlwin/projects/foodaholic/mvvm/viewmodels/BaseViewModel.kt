@@ -5,12 +5,13 @@ import com.google.gson.Gson
 import com.nyinyihtunlwin.projects.foodaholic.network.FoodaholicApi
 import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 import okhttp3.OkHttpClient
+import org.greenrobot.eventbus.Subscribe
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-open class BaseViewModel : ViewModel() {
+abstract class BaseViewModel : ViewModel() {
 
     companion object {
         lateinit var mFoodaholicApi: FoodaholicApi
@@ -33,6 +34,13 @@ open class BaseViewModel : ViewModel() {
 
 
         mFoodaholicApi = retrofit.create(FoodaholicApi::class.java)
+
+    }
+
+    abstract fun onStart()
+
+    @Subscribe
+    fun onEvent(event : Any?) {
 
     }
 
