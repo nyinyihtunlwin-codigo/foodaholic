@@ -1,53 +1,52 @@
 package com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels
 
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.databinding.ObservableBoolean
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import com.azoft.carousellayoutmanager.CenterScrollListener
 import com.nyinyihtunlwin.projects.foodaholic.activities.MealDetailsActivity
 import com.nyinyihtunlwin.projects.foodaholic.adapters.LatestRecyAdapter
+import com.nyinyihtunlwin.projects.foodaholic.data.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.MealDelegate
+import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
+import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.views.LatestView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.nyinyihtunlwin.projects.foodaholic.network.NetworkRepository
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.lang.ref.WeakReference
 
 class LatestViewModel(
-    private var contextWeakReference: WeakReference<Context>,
-    private var mView: LatestView
+    private var contextWeakReference: WeakReference<Context>
 ) : BaseViewModel(), MealDelegate {
 
-    private var mCompositeDisposable = CompositeDisposable()
+    var mResponseLD: MutableLiveData<List<MealModel>> = MutableLiveData()
+    var mErrorLD: MutableLiveData<String> = MutableLiveData()
+
     private lateinit var mAdapter: LatestRecyAdapter
     var isLoading = ObservableBoolean()
 
     override fun onStart() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
 
+        mAdapter = LatestRecyAdapter(contextWeakReference.get()!!, this)
+
+        val value = LocalRepository.getInstance().getDB().mealDao().getLatestMeals()
+        if (!value.isEmpty()) {
+            mResponseLD.value = value
+        } else {
+            startLoadingLatestMeals()
+        }
     }
 
-    fun startLoadingLatestMeals() {
+    private fun startLoadingLatestMeals() {
         isLoading.set(true)
-        val latestDisposable = mFoodaholicApi.getLatestMeals()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result ->
-                    if (result?.meals != null && result.meals.size > 0) {
-                        mView.onDataLoaded(result.meals)
-                    } else {
-                        mView.onError("No data")
-                    }
-                    isLoading.set(false)
-                },
-                { error ->
-                    isLoading.set(false)
-                    mView.onError(error.message.toString())
-                }
-            )
-        mCompositeDisposable.add(latestDisposable)
+        NetworkRepository.getInstance().startLoadingLatestMeals()
     }
 
     fun getLayoutManager(): RecyclerView.LayoutManager {
@@ -55,7 +54,6 @@ class LatestViewModel(
     }
 
     fun getAdapter(): LatestRecyAdapter {
-        mAdapter = LatestRecyAdapter(contextWeakReference.get()!!, this)
         return mAdapter
     }
 
@@ -73,8 +71,8 @@ class LatestViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        if (!mCompositeDisposable.isDisposed) {
-            mCompositeDisposable.dispose()
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
         }
         contextWeakReference.clear()
     }
@@ -90,6 +88,23 @@ class LatestViewModel(
 
     fun setNewData(mealList: List<MealModel>) {
         mAdapter.setNewData(mealList as MutableList<MealModel>)
+    }
+
+    fun dismissLoading() {
+        isLoading.set(false)
+    }
+
+    @Subscribe
+    fun onMealsLoaded(events: DataEvents.MealsLoadedEvent) {
+        mResponseLD.value = events.loadedMeals
+        val insertMeals =
+            LocalRepository.getInstance().getDB().mealDao().insertMeals(events.loadedMeals)
+        Log.e("inserted", insertMeals.size.toString())
+    }
+
+    @Subscribe
+    fun onApiErrorLoaded(event: ErrorEvents.ApiErrorEvent) {
+        mErrorLD.value = event.getMsg()
     }
 
 }

@@ -10,8 +10,8 @@ import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 @Entity(tableName = AppConstants.TABLE_CATEGORIES)
 data class CategoryModel(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Long = 0,
-    @SerializedName("idCategory")  @ColumnInfo(name = "idCategory") var idCategory: String = "",
-    @SerializedName("strCategory") @ColumnInfo(name = "strCategory") var strCategory: String = "",
-    @SerializedName("strCategoryThumb") @ColumnInfo(name = "strCategoryThumb") var strCategoryThumb: String = "",
-    @SerializedName("strCategoryDescription") @ColumnInfo(name = "strCategoryDescription") var strCategoryDescription: String = ""
+    @SerializedName("idCategory")  @ColumnInfo(name = "idCategory") var idCategory: String? = null,
+    @SerializedName("strCategory") @ColumnInfo(name = "strCategory") var strCategory: String? = null,
+    @SerializedName("strCategoryThumb") @ColumnInfo(name = "strCategoryThumb") var strCategoryThumb: String? = null,
+    @SerializedName("strCategoryDescription") @ColumnInfo(name = "strCategoryDescription") var strCategoryDescription: String? = null
 ) : BaseObservable()

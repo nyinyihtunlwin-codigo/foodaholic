@@ -75,23 +75,26 @@ class NetworkRepository {
     }
 
     @SuppressLint("CheckResult")
-    fun startLoadingLatestMeals(
-        responseLD: MutableLiveData<List<MealModel>>,
-        errorLd: MutableLiveData<String>
-    ) {
+    fun startLoadingLatestMeals() {
         BaseViewModel.mFoodaholicApi.getLatestMeals()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    if (result?.meals != null && result.meals.size > 0) {
-                        responseLD.value = result.meals
+                    if (result != null
+                        && result.meals.isNotEmpty()
+                    ) {
+                        val mealsLoadedEvent = DataEvents.MealsLoadedEvent(result.meals)
+                        EventBus.getDefault().post(mealsLoadedEvent)
                     } else {
-                        errorLd.value = "No data"
+                        if (result != null)
+                            EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent("No data found!"))
+                        else
+                            EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent())
                     }
                 },
                 { error ->
-                    errorLd.value = error.message.toString()
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
                 }
             )
     }

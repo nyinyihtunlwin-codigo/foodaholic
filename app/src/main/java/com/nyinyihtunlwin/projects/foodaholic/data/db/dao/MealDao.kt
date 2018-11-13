@@ -3,7 +3,9 @@ package com.nyinyihtunlwin.projects.foodaholic.data.db.dao
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
+import android.arch.persistence.room.Query
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
+import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 
 @Dao
 abstract interface MealDao {
@@ -13,5 +15,8 @@ abstract interface MealDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertMeals(meals: List<MealModel>): LongArray
+
+    @Query("SELECT * FROM ${AppConstants.TABLE_MEALS}")
+    abstract fun getLatestMeals(): List<MealModel>
 
 }
