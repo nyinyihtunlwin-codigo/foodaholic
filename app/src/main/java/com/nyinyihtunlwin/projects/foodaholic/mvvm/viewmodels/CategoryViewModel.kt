@@ -6,7 +6,6 @@ import android.databinding.ObservableBoolean
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import com.azoft.carousellayoutmanager.CenterScrollListener
 import com.nyinyihtunlwin.projects.foodaholic.adapters.CategoryRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.data.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.CategoryDelegate
@@ -59,10 +58,6 @@ class CategoryViewModel(
 
     fun isHasFixedSize(): Boolean {
         return true
-    }
-
-    fun getOnScrolled(): CenterScrollListener {
-        return CenterScrollListener()
     }
 
     fun onRefresh() {

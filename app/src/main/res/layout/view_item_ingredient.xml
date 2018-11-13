@@ -9,7 +9,7 @@
             android:layout_height="match_parent">
 
         <ImageView
-                android:id="@+id/iv_category"
+                android:id="@+id/iv_ingredient"
                 android:layout_width="match_parent"
                 android:layout_height="125dp"
                 android:src="@drawable/refried_bean"

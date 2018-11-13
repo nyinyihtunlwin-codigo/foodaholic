@@ -6,7 +6,6 @@ import android.databinding.ObservableBoolean
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import com.azoft.carousellayoutmanager.CenterScrollListener
 import com.nyinyihtunlwin.projects.foodaholic.activities.MealDetailsActivity
 import com.nyinyihtunlwin.projects.foodaholic.adapters.LatestRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.data.LocalRepository
@@ -61,10 +60,6 @@ class LatestViewModel(
         return true
     }
 
-    fun getOnScrolled(): CenterScrollListener {
-        return CenterScrollListener()
-    }
-
     fun onRefresh() {
         startLoadingLatestMeals()
     }
@@ -81,7 +76,7 @@ class LatestViewModel(
         contextWeakReference.get()!!.startActivity(
             MealDetailsActivity.newInstnace(
                 contextWeakReference.get()!!.applicationContext,
-                ""
+                mealModel.idMeal.toString()
             )
         )
     }

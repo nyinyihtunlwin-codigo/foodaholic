@@ -1,18 +1,22 @@
 package com.nyinyihtunlwin.projects.foodaholic.activities
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.Toast
 import com.nyinyihtunlwin.projects.foodaholic.R
-import com.nyinyihtunlwin.projects.foodaholic.adapters.IngredientsRecyAdapter
+import com.nyinyihtunlwin.projects.foodaholic.databinding.ActivityMealDetailsBinding
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.MealDetailsViewModel
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.MealDetailsViewModelFactory
+import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_meal_details.*
+import java.lang.ref.WeakReference
 
-class MealDetailsActivity : AppCompatActivity() {
-
+class MealDetailsActivity : BaseActivity() {
 
     companion object {
         private const val KEY_MEAL_ID = "KEY_MEAL_ID"
@@ -23,9 +27,14 @@ class MealDetailsActivity : AppCompatActivity() {
         }
     }
 
+    lateinit var mViewModel: MealDetailsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_meal_details)
+        var contentView: ActivityMealDetailsBinding = DataBindingUtil.setContentView(
+            this@MealDetailsActivity,
+            R.layout.activity_meal_details
+        )
         setSupportActionBar(toolbar)
         var isShow = true
         var scrollRange = -1
@@ -44,10 +53,31 @@ class MealDetailsActivity : AppCompatActivity() {
                 }
             }
         }
-        rv_ingredients.adapter = IngredientsRecyAdapter(this@MealDetailsActivity)
-        rv_ingredients.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-
         iv_back.setOnClickListener { onBackPressed() }
+
+        contentView.viewModel = ViewModelProviders.of(
+            this@MealDetailsActivity,
+            MealDetailsViewModelFactory(WeakReference(applicationContext), intent.getStringExtra(KEY_MEAL_ID))
+        ).get(MealDetailsViewModel::class.java)
+
+
+        mViewModel = contentView.viewModel!!
+
+        mViewModel.mResponseLD.observe(this, Observer {
+            mViewModel.setNewData(it as MutableList)
+            mViewModel.dismissLoading()
+        })
+        mViewModel.mErrorLD.observe(this, Observer {
+            mViewModel.dismissLoading()
+            Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_SHORT).show()
+        })
     }
+
+    override fun onStart() {
+        super.onStart()
+        mViewModel.mealId = intent.getStringExtra(KEY_MEAL_ID)
+        mViewModel.onStart()
+    }
+
 
 }

@@ -1,11 +1,9 @@
 package com.nyinyihtunlwin.projects.foodaholic.network
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.BaseViewModel
 import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -99,4 +97,28 @@ class NetworkRepository {
             )
     }
 
+    @SuppressLint("CheckResult")
+    fun startLoadingMealById(mealId:String) {
+        BaseViewModel.mFoodaholicApi.getMealById(mealId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+                    if (result != null
+                        && result.meals.isNotEmpty()
+                    ) {
+                        val mealsLoadedEvent = DataEvents.MealsLoadedEvent(result.meals)
+                        EventBus.getDefault().post(mealsLoadedEvent)
+                    } else {
+                        if (result != null)
+                            EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent("No data found!"))
+                        else
+                            EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent())
+                    }
+                },
+                { error ->
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
+                }
+            )
+    }
 }

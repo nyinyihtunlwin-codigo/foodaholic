@@ -19,4 +19,7 @@ abstract interface MealDao {
     @Query("SELECT * FROM ${AppConstants.TABLE_MEALS}")
     abstract fun getLatestMeals(): List<MealModel>
 
+    @Query("SELECT * FROM ${AppConstants.TABLE_MEALS} WHERE idMeal = :mealId")
+    abstract fun getMealById(mealId: String): MealModel?
+
 }

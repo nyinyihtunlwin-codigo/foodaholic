@@ -1,11 +1,8 @@
 package com.nyinyihtunlwin.projects.foodaholic.activities
 
 import android.databinding.DataBindingUtil
-import android.graphics.PorterDuff
-import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.content.ContextCompat
 import com.nyinyihtunlwin.projects.foodaholic.R
 import com.nyinyihtunlwin.projects.foodaholic.adapters.SectionPagerAdapter
 import com.nyinyihtunlwin.projects.foodaholic.databinding.ActivityMainBinding
@@ -14,18 +11,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
-    lateinit var contentView: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        contentView = DataBindingUtil.setContentView(
+        var contentView: ActivityMainBinding = DataBindingUtil.setContentView(
             this@MainActivity,
             R.layout.activity_main
         )
         setSupportActionBar(toolbar)
 
-     //   tv_app_name.typeface = Typeface.createFromAsset(assets, "entsans.ttf")
+        //   tv_app_name.typeface = Typeface.createFromAsset(assets, "entsans.ttf")
 
         val sectionPagerAdapter = SectionPagerAdapter(supportFragmentManager)
         vp_meal.adapter = sectionPagerAdapter

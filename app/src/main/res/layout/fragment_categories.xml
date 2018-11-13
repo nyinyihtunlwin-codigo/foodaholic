@@ -22,8 +22,7 @@
                     android:layout_marginTop="@dimen/margin_medium"
                     app:adapter="@{viewModel.adapter}"
                     app:hasFixedSize="@{viewModel.hasFixedSize}"
-                    app:layoutManager="@{viewModel.layoutManager}"
-                    app:onScrollListener="@{viewModel.onScrolled}"/>
+                    app:layoutManager="@{viewModel.layoutManager}"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </FrameLayout>
