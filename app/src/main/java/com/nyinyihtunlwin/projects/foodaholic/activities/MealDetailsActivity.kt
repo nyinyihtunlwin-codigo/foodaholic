@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.view.View
 import android.widget.Toast
 import com.nyinyihtunlwin.projects.foodaholic.R

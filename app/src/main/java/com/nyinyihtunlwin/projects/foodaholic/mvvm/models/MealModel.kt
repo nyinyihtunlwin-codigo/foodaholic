@@ -1,14 +1,15 @@
 package com.nyinyihtunlwin.projects.foodaholic.mvvm.models
 
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 
 @Entity(tableName = AppConstants.TABLE_MEALS)
 class MealModel(
-    @PrimaryKey(autoGenerate = true) var id: Long = 0,
-    @SerializedName("idMeal") var idMeal: String? = null,
+    @PrimaryKey
+    @SerializedName("idMeal") var idMeal: String = "",
     @SerializedName("strMeal") var strMeal: String? = null,
     @SerializedName("strCategory") var strCategory: String? = null,
     @SerializedName("strArea") var strArea: String? = null,
@@ -58,4 +59,58 @@ class MealModel(
     @SerializedName("strMeasure20") var strMeasure20: String? = null,
     @SerializedName("strSource") var strSource: String? = null,
     @SerializedName("dateModified") var dateModified: String? = null
-)
+) {
+
+    @Ignore
+    private lateinit var ingredients: ArrayList<String>
+
+    @Ignore
+    private lateinit var ingredientAndMeasurements: ArrayList<String>
+
+    fun getIngredients(): List<String> {
+        ingredients = arrayListOf()
+        addIngredient(strIngredient1)
+        addIngredient(strIngredient2)
+        addIngredient(strIngredient3)
+        addIngredient(strIngredient4)
+        addIngredient(strIngredient5)
+        addIngredient(strIngredient6)
+        addIngredient(strIngredient7)
+        addIngredient(strIngredient8)
+        addIngredient(strIngredient9)
+        addIngredient(strIngredient10)
+        addIngredient(strIngredient11)
+        addIngredient(strIngredient12)
+        return ingredients
+    }
+
+    private fun addIngredient(strIngredient: String?) {
+        if (!strIngredient.equals("") && strIngredient != null) {
+            ingredients.add(strIngredient.toString())
+        }
+    }
+
+    fun getIngredientsAndMeasurement(): List<String> {
+        ingredientAndMeasurements = arrayListOf()
+        addIngredientAndMeasurement(strIngredient1, strMeasure1)
+        addIngredientAndMeasurement(strIngredient2, strMeasure2)
+        addIngredientAndMeasurement(strIngredient3, strMeasure3)
+        addIngredientAndMeasurement(strIngredient4, strMeasure4)
+        addIngredientAndMeasurement(strIngredient5, strMeasure5)
+        addIngredientAndMeasurement(strIngredient6, strMeasure6)
+        addIngredientAndMeasurement(strIngredient7, strMeasure7)
+        addIngredientAndMeasurement(strIngredient8, strMeasure8)
+        addIngredientAndMeasurement(strIngredient9, strMeasure9)
+        addIngredientAndMeasurement(strIngredient10, strMeasure10)
+        addIngredientAndMeasurement(strIngredient11, strMeasure11)
+        addIngredientAndMeasurement(strIngredient12, strMeasure12)
+        return ingredientAndMeasurements
+    }
+
+    private fun addIngredientAndMeasurement(strIngredient: String?, strMeasure: String?) {
+        if (!strIngredient.equals("") && strIngredient != null) {
+            ingredientAndMeasurements.add(strIngredient.toString())
+            ingredientAndMeasurements.add(strMeasure.toString())
+        }
+    }
+}

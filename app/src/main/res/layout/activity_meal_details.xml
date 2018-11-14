@@ -63,6 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
                         android:layout_marginBottom="35dp"
+                        android:onClick="@{viewModel.onTapPlay}"
                         android:src="@drawable/ic_play_arrow_24dp"
                         android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -115,131 +116,14 @@
                             android:textColor="@color/accent"
                             android:textSize="@dimen/text_regular_2x"
                             android:layout_marginTop="@dimen/margin_medium"/>
-                    <TableLayout android:layout_width="match_parent"
-                                 android:layout_height="match_parent"
-                                 android:layout_marginTop="@dimen/margin_medium"
-                                 android:layout_marginStart="@dimen/margin_medium_2"
-                                 android:layout_marginEnd="@dimen/margin_medium_2"
-                                 android:stretchColumns="1">
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
+                    <android.support.v7.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:adapter="@{viewModel.gridAdapter}"
+                            app:hasFixedSize="@{viewModel.hasFixedSize}"
+                            app:layoutManager="@{viewModel.gridLayoutManager}"
+                            android:layout_marginTop="@dimen/margin_medium"/>
 
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                        <TableRow>
-                            <TextView
-                                    android:text="Hello"
-                                    android:padding="3dip"/>
-                            <TextView
-                                    android:text="Hello"
-                                    android:gravity="right"
-                                    android:padding="3dip"/>
-                        </TableRow>
-                    </TableLayout>
                     <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -256,11 +140,13 @@
                             android:gravity="center"
                             android:textColor="@color/secondary_text"
                             android:textSize="@dimen/text_regular"
+                            android:layout_marginBottom="@dimen/margin_medium_2"
                             android:layout_marginTop="@dimen/margin_medium"/>
                     <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
+                            android:visibility="gone"
                             android:layout_marginTop="@dimen/margin_medium_2"
                             android:layout_marginBottom="@dimen/margin_medium_2"
                             android:orientation="horizontal">

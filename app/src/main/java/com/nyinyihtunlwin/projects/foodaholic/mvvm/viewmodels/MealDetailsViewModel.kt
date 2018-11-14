@@ -2,10 +2,15 @@ package com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels
 
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import android.content.Intent
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
+import android.net.Uri
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
+import com.nyinyihtunlwin.projects.foodaholic.adapters.IngredientsAndMeasurementsRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.adapters.IngredientsRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.data.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.IngredientDelegate
@@ -13,6 +18,7 @@ import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 import com.nyinyihtunlwin.projects.foodaholic.network.NetworkRepository
+import com.nyinyihtunlwin.projects.foodaholic.utils.AppUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.lang.ref.WeakReference
@@ -27,11 +33,15 @@ class MealDetailsViewModel(
     var mErrorLD: MutableLiveData<String> = MutableLiveData()
 
     private lateinit var mAdapter: IngredientsRecyAdapter
+    private lateinit var mIMdapter: IngredientsAndMeasurementsRecyAdapter
+
     var isLoading = ObservableBoolean()
     var mMealName = ObservableField<String>()
     var mInstruction = ObservableField<String>()
     var mImage = ObservableField<String>()
     var mArea = ObservableField<String>()
+
+    var mYoutubeUrl: String? = null
 
     override fun onStart() {
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -39,6 +49,7 @@ class MealDetailsViewModel(
         }
 
         mAdapter = IngredientsRecyAdapter(contextWeakReference.get()!!, this)
+        mIMdapter = IngredientsAndMeasurementsRecyAdapter(contextWeakReference.get()!!)
 
         val value = LocalRepository.getInstance().getDB().mealDao().getMealById(mealId)
         if (value == null) {
@@ -50,15 +61,27 @@ class MealDetailsViewModel(
 
     private fun startLoadingMealById(mealId: String) {
         isLoading.set(true)
-        NetworkRepository.getInstance().startLoadingMealById(mealId)
+        if (AppUtils.getInstance().hasConnection()) {
+            NetworkRepository.getInstance().startLoadingMealById(mealId)
+        } else {
+            mErrorLD.value = "No internet connection!"
+        }
     }
 
     fun getLayoutManager(): RecyclerView.LayoutManager {
         return LinearLayoutManager(contextWeakReference.get()!!, LinearLayoutManager.HORIZONTAL, false)
     }
 
+    fun getGridLayoutManager(): RecyclerView.LayoutManager {
+        return GridLayoutManager(contextWeakReference.get()!!, 2)
+    }
+
     fun getAdapter(): IngredientsRecyAdapter {
         return mAdapter
+    }
+
+    fun getGridAdapter(): IngredientsAndMeasurementsRecyAdapter {
+        return mIMdapter
     }
 
     fun isHasFixedSize(): Boolean {
@@ -67,6 +90,11 @@ class MealDetailsViewModel(
 
     fun onRefresh() {
         startLoadingMealById(mealId)
+    }
+
+    fun onTapPlay(view: View) {
+        val youtubeIntent = Intent(Intent.ACTION_VIEW, Uri.parse(mYoutubeUrl))
+        contextWeakReference.get()!!.startActivity(youtubeIntent)
     }
 
     override fun onCleared() {
@@ -83,48 +111,17 @@ class MealDetailsViewModel(
 
     fun setNewData(meals: List<MealModel>) {
         val mealModel = meals[0]
-        var ingredients = arrayListOf<String>()
-        if (!mealModel.strIngredient1.equals("") && mealModel.strIngredient1 != null) {
-            ingredients.add(mealModel.strIngredient1.toString())
-        }
-        if (!mealModel.strIngredient2.equals("") && mealModel.strIngredient2 != null) {
-            ingredients.add(mealModel.strIngredient2.toString())
-        }
-        if (!mealModel.strIngredient3.equals("") && mealModel.strIngredient3 != null) {
-            ingredients.add(mealModel.strIngredient3.toString())
-        }
-        if (!mealModel.strIngredient4.equals("") && mealModel.strIngredient4 != null) {
-            ingredients.add(mealModel.strIngredient4.toString())
-        }
-        if (!mealModel.strIngredient5.equals("") && mealModel.strIngredient5 != null) {
-            ingredients.add(mealModel.strIngredient5.toString())
-        }
-        if (!mealModel.strIngredient6.equals("") && mealModel.strIngredient6 != null) {
-            ingredients.add(mealModel.strIngredient6.toString())
-        }
-        if (!mealModel.strIngredient7.equals("") && mealModel.strIngredient7 != null) {
-            ingredients.add(mealModel.strIngredient7.toString())
-        }
-        if (!mealModel.strIngredient8.equals("") && mealModel.strIngredient8 != null) {
-            ingredients.add(mealModel.strIngredient8.toString())
-        }
-        if (!mealModel.strIngredient9.equals("") && mealModel.strIngredient9 != null) {
-            ingredients.add(mealModel.strIngredient9.toString())
-        }
-        if (!mealModel.strIngredient10.equals("") && mealModel.strIngredient10 != null) {
-            ingredients.add(mealModel.strIngredient10.toString())
-        }
-        if (!mealModel.strIngredient11.equals("") && mealModel.strIngredient11 != null) {
-            ingredients.add(mealModel.strIngredient11.toString())
-        }
-        if (!mealModel.strIngredient12.equals("") && mealModel.strIngredient12 != null) {
-            ingredients.add(mealModel.strIngredient12.toString())
-        }
+        val ingredients = mealModel.getIngredients()
+        val ingredientsAndMeasurements = mealModel.getIngredientsAndMeasurement()
+
         mAdapter.setNewData(ingredients as MutableList<String>)
+        mIMdapter.setNewData(ingredientsAndMeasurements as MutableList<String>)
+
         mMealName.set(mealModel.strMeal)
         mInstruction.set(mealModel.strInstructions)
         mImage.set(mealModel.strMealThumb)
         mArea.set(mealModel.strArea)
+        mYoutubeUrl = mealModel.strYoutube
     }
 
     fun dismissLoading() {
@@ -134,7 +131,7 @@ class MealDetailsViewModel(
     @Subscribe
     fun onMealLoaded(events: DataEvents.MealsLoadedEvent) {
         mResponseLD.value = events.loadedMeals
-        // show meal
+        setNewData(mResponseLD.value!!)
     }
 
     @Subscribe

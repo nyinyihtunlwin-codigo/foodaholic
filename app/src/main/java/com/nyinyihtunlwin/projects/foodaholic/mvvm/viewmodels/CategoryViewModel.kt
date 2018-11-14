@@ -13,6 +13,7 @@ import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
 import com.nyinyihtunlwin.projects.foodaholic.network.NetworkRepository
+import com.nyinyihtunlwin.projects.foodaholic.utils.AppUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.lang.ref.WeakReference
@@ -45,7 +46,11 @@ class CategoryViewModel(
 
     private fun startLoadingCategories() {
         isLoading.set(true)
-        NetworkRepository.getInstance().startLoadingCategories()
+        if (AppUtils.getInstance().hasConnection()) {
+            NetworkRepository.getInstance().startLoadingCategories()
+        } else {
+            mErrorLD.value = "No internet connection!"
+        }
     }
 
     fun getLayoutManager(): RecyclerView.LayoutManager {
