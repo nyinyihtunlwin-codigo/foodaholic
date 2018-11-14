@@ -3,12 +3,11 @@ package com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.databinding.ObservableBoolean
+import android.databinding.ObservableField
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import com.nyinyihtunlwin.projects.foodaholic.activities.MealDetailsActivity
 import com.nyinyihtunlwin.projects.foodaholic.adapters.LatestRecyAdapter
-import com.nyinyihtunlwin.projects.foodaholic.data.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.MealDelegate
 import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
@@ -19,15 +18,23 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.lang.ref.WeakReference
 
-class LatestViewModel(
-    private var contextWeakReference: WeakReference<Context>
+class CategoryDetailsViewModel(
+    private var contextWeakReference: WeakReference<Context>,
+    var categoryName: String,
+    var categoryImage: String,
+    var categoryDescription: String
 ) : BaseViewModel(), MealDelegate {
 
     var mResponseLD: MutableLiveData<List<MealModel>> = MutableLiveData()
     var mErrorLD: MutableLiveData<String> = MutableLiveData()
 
     private lateinit var mAdapter: LatestRecyAdapter
+
     var isLoading = ObservableBoolean()
+    var mCategoryName = ObservableField<String>()
+    var mDescription = ObservableField<String>()
+    var mImage = ObservableField<String>()
+    var mArea = ObservableField<String>()
 
     override fun onStart() {
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -35,26 +42,20 @@ class LatestViewModel(
         }
 
         mAdapter = LatestRecyAdapter(contextWeakReference.get()!!, this)
-
-        val value = LocalRepository.getInstance().getDB().mealDao().getLatestMeals()
-        if (!value.isEmpty()) {
-            mResponseLD.value = value
-        } else {
-            startLoadingLatestMeals()
-        }
+        startLoadingMealsByCategory(categoryName)
     }
 
-    private fun startLoadingLatestMeals() {
+    private fun startLoadingMealsByCategory(categoryName: String) {
         isLoading.set(true)
         if (AppUtils.getInstance().hasConnection()) {
-            NetworkRepository.getInstance().startLoadingLatestMeals()
+            NetworkRepository.getInstance().startLoadingMealsByCategory(categoryName)
         } else {
             mErrorLD.value = "No internet connection!"
         }
     }
 
     fun getLayoutManager(): RecyclerView.LayoutManager {
-        return GridLayoutManager(contextWeakReference.get(), 2)
+        return GridLayoutManager(contextWeakReference.get()!!, 2)
     }
 
     fun getAdapter(): LatestRecyAdapter {
@@ -66,7 +67,16 @@ class LatestViewModel(
     }
 
     fun onRefresh() {
-        startLoadingLatestMeals()
+        startLoadingMealsByCategory(categoryName)
+    }
+
+    override fun onTapMeal(mealModel: MealModel) {
+        contextWeakReference.get()!!.startActivity(
+            MealDetailsActivity.newInstnace(
+                contextWeakReference.get()!!.applicationContext,
+                mealModel.idMeal
+            )
+        )
     }
 
     override fun onCleared() {
@@ -77,17 +87,11 @@ class LatestViewModel(
         contextWeakReference.clear()
     }
 
-    override fun onTapMeal(mealModel: MealModel) {
-        contextWeakReference.get()!!.startActivity(
-            MealDetailsActivity.newInstnace(
-                contextWeakReference.get()!!.applicationContext,
-                mealModel.idMeal.toString()
-            )
-        )
-    }
-
-    fun setNewData(mealList: List<MealModel>) {
-        mAdapter.setNewData(mealList as MutableList<MealModel>)
+    fun setNewData(meals: List<MealModel>) {
+        mAdapter.setNewData(meals as MutableList<MealModel>)
+        mCategoryName.set(categoryName)
+        mImage.set(categoryImage)
+        mDescription.set(categoryDescription)
     }
 
     fun dismissLoading() {
@@ -95,16 +99,12 @@ class LatestViewModel(
     }
 
     @Subscribe
-    fun onMealsLoaded(events: DataEvents.LatestMealsLoadedEvent) {
+    fun onMealLoaded(events: DataEvents.CategoryMealsLoadedEvent) {
         mResponseLD.value = events.loadedMeals
-        val insertMeals =
-            LocalRepository.getInstance().getDB().mealDao().insertMeals(events.loadedMeals)
-        Log.e("inserted", insertMeals.size.toString())
     }
 
     @Subscribe
     fun onApiErrorLoaded(event: ErrorEvents.ApiErrorEvent) {
         mErrorLD.value = event.getMsg()
     }
-
 }

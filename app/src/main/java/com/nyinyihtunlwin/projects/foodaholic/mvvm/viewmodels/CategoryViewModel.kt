@@ -6,6 +6,7 @@ import android.databinding.ObservableBoolean
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import com.nyinyihtunlwin.projects.foodaholic.activities.CategoryDetailsActivity
 import com.nyinyihtunlwin.projects.foodaholic.adapters.CategoryRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.data.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.CategoryDelegate
@@ -78,7 +79,12 @@ class CategoryViewModel(
     }
 
     override fun onTapCategory(categoryModel: CategoryModel) {
-
+        contextWeakReference.get()!!.startActivity(
+            CategoryDetailsActivity.newInstnace(contextWeakReference.get()!!,
+                categoryModel.strCategory.toString(),
+                categoryModel.strCategoryThumb.toString(),
+                categoryModel.strCategoryDescription.toString())
+        )
     }
 
     fun setNewData(catList: List<CategoryModel>) {

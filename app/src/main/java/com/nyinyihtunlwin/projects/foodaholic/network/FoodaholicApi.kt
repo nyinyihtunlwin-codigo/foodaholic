@@ -17,4 +17,7 @@ interface FoodaholicApi {
 
     @POST("lookup.php")
     fun getMealById(@Query("i") mealId: String): Observable<LatestMealsResponse>
+
+    @POST("filter.php")
+    fun getMealsByCategory(@Query("c") strCategory: String): Observable<LatestMealsResponse>
 }

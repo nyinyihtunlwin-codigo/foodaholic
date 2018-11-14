@@ -7,7 +7,11 @@ class DataEvents {
 
     class CategoriesLoadedEvent(val loadedCategories: List<CategoryModel>)
 
-    class MealsLoadedEvent(val loadedMeals: List<MealModel>)
+    class CategoryMealsLoadedEvent(val loadedMeals: List<MealModel>)
+
+    class LatestMealsLoadedEvent(val loadedMeals: List<MealModel>)
+
+    class MealDetailsLoadedEvent(val loadedMeals: List<MealModel>)
 
     class EmptyDataLoadedEvent(val errorMsg: String? = "No data found!")
 }

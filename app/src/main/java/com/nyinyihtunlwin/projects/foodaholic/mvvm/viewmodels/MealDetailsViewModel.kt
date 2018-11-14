@@ -129,9 +129,8 @@ class MealDetailsViewModel(
     }
 
     @Subscribe
-    fun onMealLoaded(events: DataEvents.MealsLoadedEvent) {
+    fun onMealLoaded(events: DataEvents.MealDetailsLoadedEvent) {
         mResponseLD.value = events.loadedMeals
-        setNewData(mResponseLD.value!!)
     }
 
     @Subscribe

@@ -31,6 +31,12 @@
                 android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
+        <activity
+                android:name=".activities.CategoryDetailsActivity"
+                android:label="@string/title_activity_meal_details"
+                android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

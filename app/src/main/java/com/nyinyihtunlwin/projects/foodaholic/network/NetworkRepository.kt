@@ -82,7 +82,7 @@ class NetworkRepository {
                     if (result != null
                         && result.meals.isNotEmpty()
                     ) {
-                        val mealsLoadedEvent = DataEvents.MealsLoadedEvent(result.meals)
+                        val mealsLoadedEvent = DataEvents.LatestMealsLoadedEvent(result.meals)
                         EventBus.getDefault().post(mealsLoadedEvent)
                     } else {
                         if (result != null)
@@ -98,7 +98,7 @@ class NetworkRepository {
     }
 
     @SuppressLint("CheckResult")
-    fun startLoadingMealById(mealId:String) {
+    fun startLoadingMealById(mealId: String) {
         BaseViewModel.mFoodaholicApi.getMealById(mealId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -107,7 +107,32 @@ class NetworkRepository {
                     if (result != null
                         && result.meals.isNotEmpty()
                     ) {
-                        val mealsLoadedEvent = DataEvents.MealsLoadedEvent(result.meals)
+                        val mealsLoadedEvent = DataEvents.MealDetailsLoadedEvent(result.meals)
+                        EventBus.getDefault().post(mealsLoadedEvent)
+                    } else {
+                        if (result != null)
+                            EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent("No data found!"))
+                        else
+                            EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent())
+                    }
+                },
+                { error ->
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
+                }
+            )
+    }
+
+    @SuppressLint("CheckResult")
+    fun startLoadingMealsByCategory(categoryName: String) {
+        BaseViewModel.mFoodaholicApi.getMealsByCategory(categoryName)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+                    if (result != null
+                        && result.meals.isNotEmpty()
+                    ) {
+                        val mealsLoadedEvent = DataEvents.CategoryMealsLoadedEvent(result.meals)
                         EventBus.getDefault().post(mealsLoadedEvent)
                     } else {
                         if (result != null)

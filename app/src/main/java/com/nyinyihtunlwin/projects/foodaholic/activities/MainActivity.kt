@@ -6,8 +6,10 @@ import android.support.design.widget.TabLayout
 import com.nyinyihtunlwin.projects.foodaholic.R
 import com.nyinyihtunlwin.projects.foodaholic.adapters.SectionPagerAdapter
 import com.nyinyihtunlwin.projects.foodaholic.databinding.ActivityMainBinding
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModel
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import org.greenrobot.eventbus.EventBus
 
 class MainActivity : BaseActivity() {
 
@@ -54,5 +56,11 @@ class MainActivity : BaseActivity() {
         tv_section_name.text = sectionTitle
     }
 
+    override fun onStop() {
+        super.onStop()
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
+    }
 
 }
