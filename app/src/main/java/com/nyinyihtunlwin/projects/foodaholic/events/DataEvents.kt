@@ -13,5 +13,7 @@ class DataEvents {
 
     class MealDetailsLoadedEvent(val loadedMeals: List<MealModel>)
 
+    class MealSearchedLoadedEvent(val loadedMeals: List<MealModel>)
+
     class EmptyDataLoadedEvent(val errorMsg: String? = "No data found!")
 }

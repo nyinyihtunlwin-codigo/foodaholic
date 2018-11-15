@@ -1,7 +1,7 @@
-package com.nyinyihtunlwin.projects.foodaholic.data
+package com.nyinyihtunlwin.projects.foodaholic.persistence
 
 import android.content.Context
-import com.nyinyihtunlwin.projects.foodaholic.data.db.FoodaholicDB
+import com.nyinyihtunlwin.projects.foodaholic.persistence.db.FoodaholicDB
 
 class LocalRepository {
     companion object {

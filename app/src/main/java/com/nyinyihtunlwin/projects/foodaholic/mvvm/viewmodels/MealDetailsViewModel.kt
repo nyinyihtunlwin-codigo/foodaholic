@@ -12,7 +12,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.nyinyihtunlwin.projects.foodaholic.adapters.IngredientsAndMeasurementsRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.adapters.IngredientsRecyAdapter
-import com.nyinyihtunlwin.projects.foodaholic.data.LocalRepository
+import com.nyinyihtunlwin.projects.foodaholic.persistence.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.IngredientDelegate
 import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents

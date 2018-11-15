@@ -20,4 +20,7 @@ interface FoodaholicApi {
 
     @POST("filter.php")
     fun getMealsByCategory(@Query("c") strCategory: String): Observable<LatestMealsResponse>
+
+    @POST("search.php")
+    fun searchMeals(@Query("s") keywords: String): Observable<LatestMealsResponse>
 }

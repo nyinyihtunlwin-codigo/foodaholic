@@ -8,5 +8,3 @@ import com.bumptech.glide.Glide
 fun setImageUrl(view: ImageView, url: String?) {
     Glide.with(view).load(url).into(view)
 }
-
-

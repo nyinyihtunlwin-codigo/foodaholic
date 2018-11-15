@@ -1,4 +1,4 @@
-package com.nyinyihtunlwin.projects.foodaholic.data.db.dao
+package com.nyinyihtunlwin.projects.foodaholic.persistence.db.dao
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert

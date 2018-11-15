@@ -1,15 +1,18 @@
 package com.nyinyihtunlwin.projects.foodaholic.activities
 
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import com.nyinyihtunlwin.projects.foodaholic.R
 import com.nyinyihtunlwin.projects.foodaholic.adapters.SectionPagerAdapter
 import com.nyinyihtunlwin.projects.foodaholic.databinding.ActivityMainBinding
-import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModel
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.MainViewModel
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.MainViewModelFactory
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
+import java.lang.ref.WeakReference
 
 class MainActivity : BaseActivity() {
 
@@ -22,8 +25,10 @@ class MainActivity : BaseActivity() {
             R.layout.activity_main
         )
         setSupportActionBar(toolbar)
-
-        //   tv_app_name.typeface = Typeface.createFromAsset(assets, "entsans.ttf")
+        contentView.viewModel = ViewModelProviders.of(
+            this@MainActivity,
+            MainViewModelFactory(WeakReference(applicationContext))
+        ).get(MainViewModel::class.java)
 
         val sectionPagerAdapter = SectionPagerAdapter(supportFragmentManager)
         vp_meal.adapter = sectionPagerAdapter

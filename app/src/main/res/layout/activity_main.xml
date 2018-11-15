@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="viewModel" type="com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.CategoryViewModel"/>
+        <variable name="viewModel" type="com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.MainViewModel"/>
     </data>
     <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -55,6 +55,7 @@
                             android:layout_height="match_parent"
                             android:paddingStart="@dimen/margin_medium_2"
                             android:paddingEnd="@dimen/margin_medium_2"
+                            android:onClick="@{viewModel.onTapInfo}"
                             android:src="@drawable/ic_info_outline_24dp"/>
 
                 </LinearLayout>
@@ -97,6 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_search_white_24dp"
+                android:onClick="@{viewModel.onTapSearch}"
                 android:layout_gravity="end|bottom"
                 android:layout_margin="@dimen/margin_medium_2"/>
 

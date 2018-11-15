@@ -5,10 +5,8 @@ import android.content.Context
 import android.databinding.ObservableBoolean
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import com.nyinyihtunlwin.projects.foodaholic.activities.MealDetailsActivity
 import com.nyinyihtunlwin.projects.foodaholic.adapters.LatestRecyAdapter
-import com.nyinyihtunlwin.projects.foodaholic.persistence.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.MealDelegate
 import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
@@ -19,9 +17,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.lang.ref.WeakReference
 
-class LatestViewModel(
-    private var contextWeakReference: WeakReference<Context>
-) : BaseViewModel(), MealDelegate {
+class SearchViewModel(var contextWeakReference: WeakReference<Context>) : BaseViewModel(), MealDelegate {
 
     var mResponseLD: MutableLiveData<List<MealModel>> = MutableLiveData()
     var mErrorLD: MutableLiveData<String> = MutableLiveData()
@@ -33,21 +29,14 @@ class LatestViewModel(
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-
         mAdapter = LatestRecyAdapter(contextWeakReference.get()!!, this)
-
-        val value = LocalRepository.getInstance().getDB().mealDao().getLatestMeals()
-        if (!value.isEmpty()) {
-            mResponseLD.value = value
-        } else {
-            startLoadingLatestMeals()
-        }
     }
 
-    private fun startLoadingLatestMeals() {
+    fun startSearchingMeals(keywords: String) {
+        mAdapter.clearData()
         isLoading.set(true)
         if (AppUtils.getInstance().hasConnection()) {
-            NetworkRepository.getInstance().startLoadingLatestMeals()
+            NetworkRepository.getInstance().startSearching(keywords)
         } else {
             mErrorLD.value = "No internet connection!"
         }
@@ -65,10 +54,6 @@ class LatestViewModel(
         return true
     }
 
-    fun onRefresh() {
-        startLoadingLatestMeals()
-    }
-
     override fun onCleared() {
         super.onCleared()
         if (EventBus.getDefault().isRegistered(this)) {
@@ -81,7 +66,7 @@ class LatestViewModel(
         contextWeakReference.get()!!.startActivity(
             MealDetailsActivity.newInstnace(
                 contextWeakReference.get()!!.applicationContext,
-                mealModel.idMeal.toString()
+                mealModel.idMeal
             )
         )
     }
@@ -95,16 +80,17 @@ class LatestViewModel(
     }
 
     @Subscribe
-    fun onMealsLoaded(events: DataEvents.LatestMealsLoadedEvent) {
+    fun onMealsLoaded(events: DataEvents.MealSearchedLoadedEvent) {
         mResponseLD.value = events.loadedMeals
-        val insertMeals =
-            LocalRepository.getInstance().getDB().mealDao().insertMeals(events.loadedMeals)
-        Log.e("inserted", insertMeals.size.toString())
+    }
+
+    @Subscribe
+    fun onEmptyDataLoaded(event: DataEvents.EmptyDataLoadedEvent) {
+        mErrorLD.value = event.errorMsg
     }
 
     @Subscribe
     fun onApiErrorLoaded(event: ErrorEvents.ApiErrorEvent) {
         mErrorLD.value = event.getMsg()
     }
-
 }

@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nyinyihtunlwin.projects.foodaholic.activities.CategoryDetailsActivity
 import com.nyinyihtunlwin.projects.foodaholic.adapters.CategoryRecyAdapter
-import com.nyinyihtunlwin.projects.foodaholic.data.LocalRepository
+import com.nyinyihtunlwin.projects.foodaholic.persistence.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.CategoryDelegate
 import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents

@@ -1,0 +1,110 @@
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="viewModel" type="com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.SearchViewModel"/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
+
+        <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:elevation="0dp">
+
+            <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_weight="1"
+                    android:background="@color/accent"
+                    app:title="Search"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:titleTextColor="@color/white"/>
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <FrameLayout
+                    android:id="@+id/fl_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primary"
+                    android:elevation="2dp">
+
+                <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_medium_2"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:layout_marginEnd="@dimen/margin_medium_2"
+                        android:layout_marginBottom="@dimen/margin_medium_2"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="@dimen/margin_small"
+                        app:cardElevation="2dp">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:layout_marginEnd="@dimen/margin_small"
+                            android:orientation="horizontal">
+
+                        <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_search_white_24dp"/>
+
+                        <EditText
+                                android:id="@+id/et_search"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_marginStart="@dimen/margin_medium"
+                                android:layout_weight="1"
+                                android:background="@android:drawable/screen_background_light_transparent"
+                                android:gravity="center_vertical"
+                                android:hint="@string/hint_search"
+                                android:imeOptions="actionSearch"
+                                android:singleLine="true"
+                                android:textColorHint="@color/secondary_text"/>
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+            </FrameLayout>
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/fl_search">
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                        android:id="@+id/swipe_refresh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:refreshing="@{viewModel.isLoading}">
+
+                    <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rv_result"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:adapter="@{viewModel.adapter}"
+                            app:hasFixedSize="@{viewModel.hasFixedSize}"
+                            app:layoutManager="@{viewModel.layoutManager}"/>
+                </android.support.v4.widget.SwipeRefreshLayout>
+            </FrameLayout>
+
+        </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

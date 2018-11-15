@@ -1,11 +1,11 @@
-package com.nyinyihtunlwin.projects.foodaholic.data.db
+package com.nyinyihtunlwin.projects.foodaholic.persistence.db
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import com.nyinyihtunlwin.projects.foodaholic.data.db.dao.CategoryDao
-import com.nyinyihtunlwin.projects.foodaholic.data.db.dao.MealDao
+import com.nyinyihtunlwin.projects.foodaholic.persistence.db.dao.CategoryDao
+import com.nyinyihtunlwin.projects.foodaholic.persistence.db.dao.MealDao
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.CategoryModel
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 

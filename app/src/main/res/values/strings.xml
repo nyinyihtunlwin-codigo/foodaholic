@@ -21,4 +21,6 @@
         450 for 10-15 minutes just until the cheese is melted and bubbling. Out of the oven top all the tacos with the
         sliced grape tomaotes, jalapeno and cilantro. Finish with a drizzle of guacamole and sour cream. Enjoy!
     </string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="hint_search">Enter keywords</string>
 </resources>

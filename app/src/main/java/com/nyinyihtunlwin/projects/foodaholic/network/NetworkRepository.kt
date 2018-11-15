@@ -146,4 +146,25 @@ class NetworkRepository {
                 }
             )
     }
+
+    @SuppressLint("CheckResult")
+    fun startSearching(keywords: String) {
+        BaseViewModel.mFoodaholicApi.searchMeals(keywords)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+                    if (result?.meals != null
+                    ) {
+                        val mealsLoadedEvent = DataEvents.MealSearchedLoadedEvent(result.meals)
+                        EventBus.getDefault().post(mealsLoadedEvent)
+                    } else {
+                        EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent("No data found!"))
+                    }
+                },
+                { error ->
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
+                }
+            )
+    }
 }
