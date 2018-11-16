@@ -1,6 +1,8 @@
 package com.nyinyihtunlwin.projects.foodaholic.activities
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -16,6 +18,11 @@ import java.lang.ref.WeakReference
 
 class MainActivity : BaseActivity() {
 
+    companion object {
+        fun newInstnace(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +73,15 @@ class MainActivity : BaseActivity() {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
         }
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        android.os.Process.killProcess(android.os.Process.myPid())
+        System.exit(0)
     }
 
 }
