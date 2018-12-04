@@ -3,6 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="android.view.View"/>
+        <variable name="drawable" type="android.graphics.drawable.Drawable"/>
         <variable name="viewModel" type="com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.MealDetailsViewModel"/>
     </data>
 
@@ -31,6 +33,19 @@
                         android:scaleType="centerCrop"
                         app:imageUrl="@{viewModel.mImage}"
                         android:src="@drawable/placeholder"/>
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:background="@drawable/bg_bookmark"
+                        android:paddingTop="@dimen/margin_large"
+                        android:paddingStart="@dimen/margin_small"
+                        android:visibility="@{viewModel.isVisibleBookmarkIcon ? View.VISIBLE : View.GONE}"
+                        android:paddingEnd="@dimen/margin_small"
+                        android:src="@{viewModel.isBookmarked ? @drawable/ic_bookmark_24dp :@drawable/ic_bookmark_border_24dp}"
+                        android:onClick="@{viewModel.onTapBookmark}"
+                        android:paddingBottom="@dimen/margin_small"
+                        android:layout_marginEnd="@dimen/margin_xlarge"/>
 
                 <RelativeLayout
                         android:layout_width="match_parent"
@@ -119,6 +134,7 @@
                     <android.support.v7.widget.RecyclerView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
                             app:adapter="@{viewModel.gridAdapter}"
                             app:hasFixedSize="@{viewModel.hasFixedSize}"
                             app:layoutManager="@{viewModel.gridLayoutManager}"

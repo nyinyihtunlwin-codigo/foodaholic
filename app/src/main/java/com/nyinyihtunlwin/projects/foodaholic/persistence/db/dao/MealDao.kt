@@ -16,10 +16,13 @@ abstract interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertMeals(meals: List<MealModel>): LongArray
 
-    @Query("SELECT * FROM ${AppConstants.TABLE_MEALS}")
-    abstract fun getLatestMeals(): List<MealModel>
+    @Query("SELECT * FROM ${AppConstants.TABLE_MEALS} WHERE isLatest = :isLatest")
+    abstract fun getLatestMeals(isLatest: Boolean = true): List<MealModel>
 
     @Query("SELECT * FROM ${AppConstants.TABLE_MEALS} WHERE idMeal = :mealId")
     abstract fun getMealById(mealId: String): MealModel?
+
+    @Query("DELETE FROM ${AppConstants.TABLE_MEALS} WHERE idMeal = :mealId AND isLatest = :isLatest")
+    abstract fun deleteMealById(mealId: String, isLatest: Boolean = false): Int
 
 }

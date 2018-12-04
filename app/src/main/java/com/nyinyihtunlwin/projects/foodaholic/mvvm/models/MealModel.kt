@@ -8,7 +8,8 @@ import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 
 @Entity(tableName = AppConstants.TABLE_MEALS)
 class MealModel(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
     @SerializedName("idMeal") var idMeal: String = "",
     @SerializedName("strMeal") var strMeal: String? = null,
     @SerializedName("strCategory") var strCategory: String? = null,
@@ -58,7 +59,8 @@ class MealModel(
     @SerializedName("strMeasure19") var strMeasure19: String? = null,
     @SerializedName("strMeasure20") var strMeasure20: String? = null,
     @SerializedName("strSource") var strSource: String? = null,
-    @SerializedName("dateModified") var dateModified: String? = null
+    @SerializedName("dateModified") var dateModified: String? = null,
+    @SerializedName("isLatest") var isLatest: Boolean = true
 ) {
 
     @Ignore

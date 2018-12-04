@@ -104,6 +104,7 @@
                             android:id="@+id/rv_ingredients"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
                             app:adapter="@{viewModel.adapter}"
                             android:descendantFocusability="blocksDescendants"
                             app:hasFixedSize="@{viewModel.hasFixedSize}"

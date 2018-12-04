@@ -101,6 +101,15 @@
                 android:onClick="@{viewModel.onTapSearch}"
                 android:layout_gravity="end|bottom"
                 android:layout_margin="@dimen/margin_medium_2"/>
+        <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_bookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/white"
+                android:src="@drawable/ic_bookmark_24dp"
+                android:onClick="@{viewModel.onTapBookmark}"
+                android:layout_gravity="start|bottom"
+                android:layout_margin="@dimen/margin_medium_2"/>
 
 
     </android.support.design.widget.CoordinatorLayout>

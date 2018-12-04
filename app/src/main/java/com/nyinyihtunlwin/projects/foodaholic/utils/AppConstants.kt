@@ -8,5 +8,6 @@ class AppConstants {
         val IMAGE_URL = "https://www.themealdb.com/images/ingredients/"
         const val TABLE_CATEGORIES = "categories"
         const val TABLE_MEALS = "meals"
+        const val TABLE_BOOKMARKS = "bookmarks"
     }
 }

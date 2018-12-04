@@ -9,15 +9,19 @@ import android.net.Uri
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import com.nyinyihtunlwin.projects.foodaholic.R
 import com.nyinyihtunlwin.projects.foodaholic.adapters.IngredientsAndMeasurementsRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.adapters.IngredientsRecyAdapter
-import com.nyinyihtunlwin.projects.foodaholic.persistence.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.IngredientDelegate
 import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
+import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.BookmarkModel
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 import com.nyinyihtunlwin.projects.foodaholic.network.NetworkRepository
+import com.nyinyihtunlwin.projects.foodaholic.persistence.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.utils.AppUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -36,6 +40,8 @@ class MealDetailsViewModel(
     private lateinit var mIMdapter: IngredientsAndMeasurementsRecyAdapter
 
     var isLoading = ObservableBoolean()
+    var isVisibleBookmarkIcon = ObservableBoolean()
+    var isBookmarked = ObservableBoolean()
     var mMealName = ObservableField<String>()
     var mInstruction = ObservableField<String>()
     var mImage = ObservableField<String>()
@@ -52,15 +58,23 @@ class MealDetailsViewModel(
         mIMdapter = IngredientsAndMeasurementsRecyAdapter(contextWeakReference.get()!!)
 
         val value = LocalRepository.getInstance().getDB().mealDao().getMealById(mealId)
+        val valueBookmark = LocalRepository.getInstance().getDB().bookmarkDao().getMealById(mealId)
         if (value == null) {
             startLoadingMealById(mealId)
         } else {
+            isVisibleBookmarkIcon.set(true)
             mResponseLD.value = arrayListOf(value)
+        }
+        if (valueBookmark != null) {
+            isBookmarked.set(true)
+        } else {
+            isBookmarked.set(false)
         }
     }
 
     private fun startLoadingMealById(mealId: String) {
         isLoading.set(true)
+        isVisibleBookmarkIcon.set(false)
         if (AppUtils.getInstance().hasConnection()) {
             NetworkRepository.getInstance().startLoadingMealById(mealId)
         } else {
@@ -93,8 +107,39 @@ class MealDetailsViewModel(
     }
 
     fun onTapPlay(view: View) {
-        val youtubeIntent = Intent(Intent.ACTION_VIEW, Uri.parse(mYoutubeUrl))
-        contextWeakReference.get()!!.startActivity(youtubeIntent)
+        if (mYoutubeUrl != null) {
+            val youtubeIntent = Intent(Intent.ACTION_VIEW, Uri.parse(mYoutubeUrl))
+            contextWeakReference.get()!!.startActivity(youtubeIntent)
+        }
+    }
+
+    fun onTapBookmark(view: View) {
+        val mealModel = mResponseLD.value!![0]
+        val bookmarkModel = BookmarkModel().apply {
+            idMeal = mealModel.idMeal
+            strMeal = mealModel.strMeal
+            strMealThumb = mealModel.strMealThumb
+        }
+
+        if (LocalRepository.getInstance().getDB().bookmarkDao().getMealById(bookmarkModel.idMeal) != null) {
+            val deleteFromBookmark =
+                LocalRepository.getInstance().getDB().bookmarkDao().deleteMealById(bookmarkModel.idMeal)
+            Log.e("deleted from bookmark", deleteFromBookmark.toString())
+
+            val deleteMealById = LocalRepository.getInstance().getDB().mealDao().deleteMealById(mealModel.idMeal)
+            isBookmarked.set(false)
+        } else {
+            val insertBookmarkedMeal =
+                LocalRepository.getInstance().getDB().bookmarkDao().insertMeal(bookmarkModel)
+            Log.e("inserted into bookmark", insertBookmarkedMeal.toString())
+
+            val meal = LocalRepository.getInstance().getDB().mealDao().getMealById(mealModel.idMeal)
+            if (meal == null) {
+                LocalRepository.getInstance().getDB().mealDao().insertMeal(mealModel.apply { isLatest = false })
+            }
+            isBookmarked.set(true)
+        }
+
     }
 
     override fun onCleared() {
@@ -131,6 +176,7 @@ class MealDetailsViewModel(
     @Subscribe
     fun onMealLoaded(events: DataEvents.MealDetailsLoadedEvent) {
         mResponseLD.value = events.loadedMeals
+        isVisibleBookmarkIcon.set(true)
     }
 
     @Subscribe

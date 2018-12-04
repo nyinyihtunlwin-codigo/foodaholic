@@ -6,7 +6,7 @@ import android.databinding.ObservableBoolean
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.nyinyihtunlwin.projects.foodaholic.activities.MealDetailsActivity
-import com.nyinyihtunlwin.projects.foodaholic.adapters.LatestRecyAdapter
+import com.nyinyihtunlwin.projects.foodaholic.adapters.MealRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.delegates.MealDelegate
 import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
@@ -22,14 +22,14 @@ class SearchViewModel(var contextWeakReference: WeakReference<Context>) : BaseVi
     var mResponseLD: MutableLiveData<List<MealModel>> = MutableLiveData()
     var mErrorLD: MutableLiveData<String> = MutableLiveData()
 
-    private lateinit var mAdapter: LatestRecyAdapter
+    private lateinit var mAdapter: MealRecyAdapter
     var isLoading = ObservableBoolean()
 
     override fun onStart() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-        mAdapter = LatestRecyAdapter(contextWeakReference.get()!!, this)
+        mAdapter = MealRecyAdapter(contextWeakReference.get()!!, this)
     }
 
     fun startSearchingMeals(keywords: String) {
@@ -46,7 +46,7 @@ class SearchViewModel(var contextWeakReference: WeakReference<Context>) : BaseVi
         return GridLayoutManager(contextWeakReference.get(), 2)
     }
 
-    fun getAdapter(): LatestRecyAdapter {
+    fun getAdapter(): MealRecyAdapter {
         return mAdapter
     }
 

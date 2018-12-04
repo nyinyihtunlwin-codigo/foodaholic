@@ -7,7 +7,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nyinyihtunlwin.projects.foodaholic.activities.MealDetailsActivity
-import com.nyinyihtunlwin.projects.foodaholic.adapters.LatestRecyAdapter
+import com.nyinyihtunlwin.projects.foodaholic.adapters.MealRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.persistence.LocalRepository
 import com.nyinyihtunlwin.projects.foodaholic.delegates.MealDelegate
 import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
@@ -26,7 +26,7 @@ class LatestViewModel(
     var mResponseLD: MutableLiveData<List<MealModel>> = MutableLiveData()
     var mErrorLD: MutableLiveData<String> = MutableLiveData()
 
-    private lateinit var mAdapter: LatestRecyAdapter
+    private lateinit var mAdapter: MealRecyAdapter
     var isLoading = ObservableBoolean()
 
     override fun onStart() {
@@ -34,7 +34,7 @@ class LatestViewModel(
             EventBus.getDefault().register(this)
         }
 
-        mAdapter = LatestRecyAdapter(contextWeakReference.get()!!, this)
+        mAdapter = MealRecyAdapter(contextWeakReference.get()!!, this)
 
         val value = LocalRepository.getInstance().getDB().mealDao().getLatestMeals()
         if (!value.isEmpty()) {
@@ -57,7 +57,7 @@ class LatestViewModel(
         return GridLayoutManager(contextWeakReference.get(), 2)
     }
 
-    fun getAdapter(): LatestRecyAdapter {
+    fun getAdapter(): MealRecyAdapter {
         return mAdapter
     }
 

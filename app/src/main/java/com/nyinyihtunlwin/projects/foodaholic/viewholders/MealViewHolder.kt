@@ -7,7 +7,7 @@ import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseViewHolder
 import kotlinx.android.synthetic.main.view_item_category.view.*
 
-class LatestViewHolder(
+class MealViewHolder(
     itemView: View,
     var mealDelegate: MealDelegate
 ) : BaseViewHolder<MealModel>(itemView) {

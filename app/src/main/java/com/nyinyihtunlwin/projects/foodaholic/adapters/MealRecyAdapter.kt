@@ -5,14 +5,15 @@ import android.view.ViewGroup
 import com.nyinyihtunlwin.projects.foodaholic.R
 import com.nyinyihtunlwin.projects.foodaholic.delegates.MealDelegate
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.models.MealModel
-import com.nyinyihtunlwin.projects.foodaholic.viewholders.LatestViewHolder
+import com.nyinyihtunlwin.projects.foodaholic.viewholders.MealViewHolder
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseRecyclerAdapter
 import com.nyinyihtunlwin.projects.sharedmodule.ui.BaseViewHolder
 
-class LatestRecyAdapter(context: Context,var mealDelegate:MealDelegate) : BaseRecyclerAdapter<LatestViewHolder, MealModel>(context) {
+class MealRecyAdapter(context: Context, var mealDelegate: MealDelegate) :
+    BaseRecyclerAdapter<MealViewHolder, MealModel>(context) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<MealModel> {
-        var view = mLayoutInflator.inflate(R.layout.view_item_meal, parent, false)
-        return LatestViewHolder(view,mealDelegate)
+        val view = mLayoutInflator.inflate(R.layout.view_item_meal, parent, false)
+        return MealViewHolder(view, mealDelegate)
     }
 }
