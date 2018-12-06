@@ -25,10 +25,11 @@ class BookmarkActivity : BaseActivity() {
     }
 
     lateinit var mViewModel: BookmarkViewModel
+    private lateinit var contentView: ActivityBookmarkBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var contentView: ActivityBookmarkBinding = DataBindingUtil.setContentView(
+        contentView = DataBindingUtil.setContentView(
             this@BookmarkActivity,
             R.layout.activity_bookmark
         )
@@ -64,7 +65,9 @@ class BookmarkActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
+        contentView.invalidateAll()
         mViewModel.onStart()
     }
+
 
 }

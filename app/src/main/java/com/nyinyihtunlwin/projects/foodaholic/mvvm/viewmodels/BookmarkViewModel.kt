@@ -25,7 +25,6 @@ class BookmarkViewModel(
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-
         mAdapter = BookmarkRecyAdapter(contextWeakReference.get()!!, this)
         val value = LocalRepository.getInstance().getDB().bookmarkDao().getBookmarkedMeals()
         if (!value.isEmpty()) {

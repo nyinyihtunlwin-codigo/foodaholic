@@ -49,6 +49,9 @@
                 android:label="@string/title_activity_bookmark"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+                android:name=".activities.IntroScreenActivity"
+                android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
