@@ -29,4 +29,9 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="version">Version 1.0</string>
     <string name="title_activity_bookmark">Bookmarks</string>
+    <string name="title_activity_info">About</string>
+    <string name="recipes">Recipes</string>
+    <string name="developed_by">Developed by</string>
+    <string name="me">Nyi Nyi Htun Lwin</string>
+    <string name="contact">Contact me via</string>
 </resources>

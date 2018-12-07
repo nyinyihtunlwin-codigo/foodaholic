@@ -38,16 +38,15 @@ class IntroScreenActivity : MaterialIntroActivity() {
                 .backgroundColor(R.color.white)
                 .buttonsColor(R.color.accent)
                 .image(R.drawable.miscellaneous)
-                .title("Miscellaneous")
-                .description("Miscellaneous prepared food?")
+                .title("Miscellaneous foods?")
                 .build()
         )
         addSlide(
             SlideFragmentBuilder()
                 .backgroundColor(R.color.white)
                 .buttonsColor(R.color.accent)
-                .image(R.drawable.side)
-                .title("Side")
+                .image(R.drawable.pasta)
+                .title("Pasta")
                 .description("Would you join us?")
                 .build()
         )
@@ -55,6 +54,7 @@ class IntroScreenActivity : MaterialIntroActivity() {
 
     override fun onFinish() {
         super.onFinish()
+        startActivity(MainActivity.newInstnace(applicationContext))
     }
 
 }
