@@ -5,7 +5,6 @@ import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.nyinyihtunlwin.projects.foodaholic.R
-import com.nyinyihtunlwin.projects.foodaholic.utils.ConfigUtils
 
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -16,13 +15,7 @@ class SplashScreenActivity : AppCompatActivity() {
         actionBar?.hide()
         setContentView(R.layout.activity_splash_screen)
         Handler().postDelayed({
-            if (ConfigUtils.getInstance().isFirstTimeInstalled()) {
-                ConfigUtils.getInstance().setFirstTimeInstalled(false)
-                startActivity(IntroScreenActivity.newInstnace(applicationContext))
-            } else {
-                startActivity(MainActivity.newInstnace(applicationContext))
-            }
-
+            startActivity(MainActivity.newInstnace(applicationContext))
         }, 2000)
     }
 

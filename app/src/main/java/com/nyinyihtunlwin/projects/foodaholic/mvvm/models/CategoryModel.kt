@@ -9,8 +9,7 @@ import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 
 @Entity(tableName = AppConstants.TABLE_CATEGORIES)
 data class CategoryModel(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    @PrimaryKey
     @SerializedName("idCategory") @ColumnInfo(name = "idCategory") var idCategory: String = "",
     @SerializedName("strCategory") @ColumnInfo(name = "strCategory") var strCategory: String? = null,
     @SerializedName("strCategoryThumb") @ColumnInfo(name = "strCategoryThumb") var strCategoryThumb: String? = null,

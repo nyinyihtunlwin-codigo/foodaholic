@@ -8,8 +8,7 @@ import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
 
 @Entity(tableName = AppConstants.TABLE_MEALS)
 class MealModel(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    @PrimaryKey
     @SerializedName("idMeal") var idMeal: String = "",
     @SerializedName("strMeal") var strMeal: String? = null,
     @SerializedName("strCategory") var strCategory: String? = null,

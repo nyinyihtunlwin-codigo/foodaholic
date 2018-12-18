@@ -11,8 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import com.nyinyihtunlwin.projects.foodaholic.R
+import android.widget.Toast
 import com.nyinyihtunlwin.projects.foodaholic.adapters.IngredientsAndMeasurementsRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.adapters.IngredientsRecyAdapter
 import com.nyinyihtunlwin.projects.foodaholic.delegates.IngredientDelegate
@@ -107,9 +106,15 @@ class MealDetailsViewModel(
     }
 
     fun onTapPlay(view: View) {
-        if (mYoutubeUrl != null) {
+        if (mYoutubeUrl != null && mYoutubeUrl != "") {
             val youtubeIntent = Intent(Intent.ACTION_VIEW, Uri.parse(mYoutubeUrl))
             contextWeakReference.get()!!.startActivity(youtubeIntent)
+        } else {
+            Toast.makeText(
+                contextWeakReference.get()!!.applicationContext,
+                "No video found!",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
