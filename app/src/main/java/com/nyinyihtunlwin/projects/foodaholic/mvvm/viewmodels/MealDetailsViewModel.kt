@@ -156,7 +156,6 @@ class MealDetailsViewModel(
     }
 
     override fun onTapIngredient(ingredient: String) {
-
     }
 
     fun setNewData(meals: List<MealModel>) {

@@ -16,4 +16,6 @@ class DataEvents {
     class MealSearchedLoadedEvent(val loadedMeals: List<MealModel>)
 
     class EmptyDataLoadedEvent(val errorMsg: String? = "No data found!")
+
+    class IngredientClickedEvent(val photoUrl: String)
 }
