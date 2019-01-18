@@ -24,15 +24,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/iv_category"
                 android:textColor="@color/white"
-                android:padding="@dimen/margin_medium_2"
-                android:paddingTop="@dimen/margin_medium"
-                android:paddingBottom="@dimen/margin_medium"/>
+                android:textStyle="bold"
+                android:paddingStart="@dimen/margin_medium_2"
+                android:paddingTop="@dimen/margin_medium"/>
         <TextView
                 android:id="@+id/tv_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/margin_medium_2"
+                android:paddingStart="@dimen/margin_medium_2"
+                android:paddingEnd="@dimen/margin_medium_2"
+                android:paddingBottom="@dimen/margin_medium_2"
+                android:paddingTop="@dimen/margin_medium"
+                android:textColor="@color/white"
                 android:maxLines="3"
+                android:textSize="@dimen/text_regular"
+                android:background="@android:drawable/screen_background_dark_transparent"
                 android:ellipsize="end"
                 app:layout_constraintTop_toBottomOf="@id/iv_category"/>
 
