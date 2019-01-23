@@ -10,14 +10,35 @@ apply plugin: 'com.google.gms.google-services'
 
 apply plugin: 'io.fabric'
 
+
+advancedVersioning {
+    nameOptions {
+        versionMajor 0
+        versionMinor 0
+        versionPatch 1
+    }
+    codeOptions {
+        versionCodeType org.moallemi.gradle.internal.VersionCodeType.AUTO_INCREMENT_ONE_STEP
+        dependsOnTasks 'release'
+    }
+    outputOptions {
+        renameOutput true
+        nameFormat '${appName}-${buildType}-${versionName}'
+    }
+}
+
+def appVersionName = advancedVersioning.versionName
+def appVersionCode = advancedVersioning.versionCode
+
+
 android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.nyinyihtunlwin.projects.foodaholic"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
