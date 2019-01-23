@@ -1,2 +1,2 @@
 # foodaholic
-An app to show recipes from around the world
+A smart cooking app that offers step-by-step recipes including video tutorials.
