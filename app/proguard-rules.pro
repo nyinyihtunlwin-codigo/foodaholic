@@ -20,5 +20,14 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-dontwarn okhttp3.internal.platform.*
+-dontwarn okio.*
+-dontwarn retrofit2.*
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
 
 

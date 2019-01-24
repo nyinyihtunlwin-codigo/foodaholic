@@ -10,12 +10,14 @@ apply plugin: 'com.google.gms.google-services'
 
 apply plugin: 'io.fabric'
 
+apply plugin: 'org.moallemi.advanced-build-version'
+
 
 advancedVersioning {
     nameOptions {
-        versionMajor 0
+        versionMajor 1
         versionMinor 0
-        versionPatch 1
+        versionPatch 0
     }
     codeOptions {
         versionCodeType org.moallemi.gradle.internal.VersionCodeType.AUTO_INCREMENT_ONE_STEP
@@ -86,8 +88,6 @@ dependencies {
     kapt 'android.arch.lifecycle:compiler:1.1.1'
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-
-    implementation 'agency.tango.android:material-intro-screen:0.0.5'
 
     implementation 'com.google.firebase:firebase-core:16.0.1'
 

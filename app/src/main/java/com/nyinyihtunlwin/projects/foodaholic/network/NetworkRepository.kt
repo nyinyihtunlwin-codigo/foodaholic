@@ -1,12 +1,15 @@
 package com.nyinyihtunlwin.projects.foodaholic.network
 
-import android.annotation.SuppressLint
 import com.google.gson.Gson
 import com.nyinyihtunlwin.projects.foodaholic.events.DataEvents
 import com.nyinyihtunlwin.projects.foodaholic.events.ErrorEvents
 import com.nyinyihtunlwin.projects.foodaholic.mvvm.viewmodels.BaseViewModel
+import com.nyinyihtunlwin.projects.foodaholic.network.responses.CategoriesResponse
+import com.nyinyihtunlwin.projects.foodaholic.network.responses.LatestMealsResponse
 import com.nyinyihtunlwin.projects.foodaholic.utils.AppConstants
+import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import org.greenrobot.eventbus.EventBus
@@ -47,16 +50,15 @@ class NetworkRepository {
         mFoodaholicApi = retrofit!!.create(FoodaholicApi::class.java)
     }
 
-    @SuppressLint("CheckResult")
     fun startLoadingCategories() {
         BaseViewModel.mFoodaholicApi.getCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result ->
-                    if (result != null
-                        && result.categories.isNotEmpty()
-                    ) {
+            .subscribe(object : Observer<CategoriesResponse> {
+                override fun onComplete() {}
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(result: CategoriesResponse) {
+                    if (result != null && result.categories.isNotEmpty()) {
                         val categoriesLoadedEvent = DataEvents.CategoriesLoadedEvent(result.categories)
                         EventBus.getDefault().post(categoriesLoadedEvent)
                     } else {
@@ -65,23 +67,23 @@ class NetworkRepository {
                         else
                             EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent())
                     }
-                },
-                { error ->
-                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
                 }
-            )
+
+                override fun onError(e: Throwable) {
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(e))
+                }
+            })
     }
 
-    @SuppressLint("CheckResult")
     fun startLoadingLatestMeals() {
         BaseViewModel.mFoodaholicApi.getLatestMeals()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result ->
-                    if (result != null
-                        && result.meals.isNotEmpty()
-                    ) {
+            .subscribe(object : Observer<LatestMealsResponse> {
+                override fun onComplete() {}
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(result: LatestMealsResponse) {
+                    if (result != null && result.meals.isNotEmpty()) {
                         val mealsLoadedEvent = DataEvents.LatestMealsLoadedEvent(result.meals)
                         EventBus.getDefault().post(mealsLoadedEvent)
                     } else {
@@ -90,23 +92,23 @@ class NetworkRepository {
                         else
                             EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent())
                     }
-                },
-                { error ->
-                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
                 }
-            )
+
+                override fun onError(e: Throwable) {
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(e))
+                }
+            })
     }
 
-    @SuppressLint("CheckResult")
     fun startLoadingMealById(mealId: String) {
         BaseViewModel.mFoodaholicApi.getMealById(mealId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result ->
-                    if (result != null
-                        && result.meals.isNotEmpty()
-                    ) {
+            .subscribe(object : Observer<LatestMealsResponse> {
+                override fun onComplete() {}
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(result: LatestMealsResponse) {
+                    if (result != null && result.meals.isNotEmpty()) {
                         val mealsLoadedEvent = DataEvents.MealDetailsLoadedEvent(result.meals)
                         EventBus.getDefault().post(mealsLoadedEvent)
                     } else {
@@ -115,23 +117,23 @@ class NetworkRepository {
                         else
                             EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent())
                     }
-                },
-                { error ->
-                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
                 }
-            )
+
+                override fun onError(e: Throwable) {
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(e))
+                }
+            })
     }
 
-    @SuppressLint("CheckResult")
     fun startLoadingMealsByCategory(categoryName: String) {
         BaseViewModel.mFoodaholicApi.getMealsByCategory(categoryName)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result ->
-                    if (result != null
-                        && result.meals.isNotEmpty()
-                    ) {
+            .subscribe(object : Observer<LatestMealsResponse> {
+                override fun onComplete() {}
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(result: LatestMealsResponse) {
+                    if (result != null && result.meals.isNotEmpty()) {
                         val mealsLoadedEvent = DataEvents.CategoryMealsLoadedEvent(result.meals)
                         EventBus.getDefault().post(mealsLoadedEvent)
                     } else {
@@ -140,31 +142,34 @@ class NetworkRepository {
                         else
                             EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent())
                     }
-                },
-                { error ->
-                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
                 }
-            )
+
+                override fun onError(e: Throwable) {
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(e))
+                }
+            })
+
     }
 
-    @SuppressLint("CheckResult")
     fun startSearching(keywords: String) {
         BaseViewModel.mFoodaholicApi.searchMeals(keywords)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result ->
-                    if (result?.meals != null
-                    ) {
-                        val mealsLoadedEvent = DataEvents.MealSearchedLoadedEvent(result.meals)
+            .subscribe(object : Observer<LatestMealsResponse> {
+                override fun onComplete() {}
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(latestMealsResponse: LatestMealsResponse) {
+                    if (latestMealsResponse?.meals != null) {
+                        val mealsLoadedEvent = DataEvents.MealSearchedLoadedEvent(latestMealsResponse.meals)
                         EventBus.getDefault().post(mealsLoadedEvent)
                     } else {
                         EventBus.getDefault().post(DataEvents.EmptyDataLoadedEvent("No data found!"))
                     }
-                },
-                { error ->
-                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(error))
                 }
-            )
+
+                override fun onError(e: Throwable) {
+                    EventBus.getDefault().post(ErrorEvents.ApiErrorEvent(e))
+                }
+            })
     }
 }

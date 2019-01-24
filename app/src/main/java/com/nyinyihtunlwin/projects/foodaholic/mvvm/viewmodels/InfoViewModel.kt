@@ -25,7 +25,7 @@ class InfoViewModel(
     }
 
     fun onTapLinkedIn(view: View) {
-        open("https://www.linkedin.com/in/nyinyi-htunlwin-1b2999112/")
+        open("https://www.linkedin.com/in/nyi-nyi-htun-lwin-1b2999112")
     }
 
     fun onTapGitHub(view: View) {

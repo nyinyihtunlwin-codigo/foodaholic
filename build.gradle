@@ -18,8 +18,6 @@ buildscript {
     }
 }
 
-apply plugin: 'org.moallemi.advanced-build-version'
-
 allprojects {
     repositories {
         google()
